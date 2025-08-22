@@ -88,7 +88,7 @@ const Header: React.FC = () => {
   ];
 
   return (
-    <header className="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-50">
+    <header className="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-[60]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Top section with logo, search, and social icons */}
         <div className="flex justify-between items-center h-16 lg:h-18">
@@ -188,7 +188,7 @@ const Header: React.FC = () => {
                   </button>
                   
                   {isCategoryDropdownOpen && (
-                    <div className="absolute top-full left-0 mt-2 w-56 bg-white rounded-lg shadow-xl border border-gray-200 z-50 max-h-96 overflow-y-auto">
+                    <div className="absolute top-full left-0 mt-2 w-56 bg-white rounded-lg shadow-xl border border-gray-200 z-[100] max-h-96 overflow-y-auto">
                       <div className="py-2">
                         {item.dropdownItems?.map((dropdownItem, index) => {
                           if (dropdownItem.isSeparator) {
