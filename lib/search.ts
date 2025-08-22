@@ -1,6 +1,7 @@
 import Fuse from 'fuse.js';
 import type { FuseResultMatch, IFuseOptions } from 'fuse.js';
 import { Recipe, MainCategory, RecipeTag } from '@/types/recipe';
+import { normalizeFractions } from './fractions';
 
 export interface SearchOptions {
   category?: MainCategory;
@@ -73,6 +74,9 @@ export function searchRecipesEnhanced(
     return filteredRecipes.map(recipe => ({ recipe }));
   }
   
+  // Normalize fractions in search term
+  const normalizedSearchTerm = normalizeFractions(options.searchTerm);
+  
   // Configure Fuse with custom threshold if provided
   const searchOptions = { ...fuseOptions };
   if (options.fuzzyThreshold !== undefined) {
@@ -81,7 +85,7 @@ export function searchRecipesEnhanced(
   
   // Create Fuse instance and search
   const fuse = new Fuse(filteredRecipes, searchOptions);
-  const searchResults = fuse.search(options.searchTerm);
+  const searchResults = fuse.search(normalizedSearchTerm);
   
   // Transform Fuse results to our SearchResult format
   return searchResults.map(result => ({
@@ -101,14 +105,16 @@ export function getIngredientSuggestions(
 ): IngredientSuggestion[] {
   const ingredientMap = new Map<string, { count: number; recipes: Recipe[] }>();
   const searchLower = searchTerm.toLowerCase();
+  const normalizedSearchTerm = normalizeFractions(searchTerm).toLowerCase();
   
   // Build ingredient frequency map
   recipes.forEach(recipe => {
     recipe.ingredients.forEach(ingredient => {
       const ingredientLower = ingredient.toLowerCase();
+      const normalizedIngredient = normalizeFractions(ingredient).toLowerCase();
       
-      // Check if ingredient contains the search term
-      if (ingredientLower.includes(searchLower)) {
+      // Check if ingredient contains the search term (both original and normalized)
+      if (ingredientLower.includes(searchLower) || normalizedIngredient.includes(normalizedSearchTerm)) {
         // Extract the main ingredient name (before comma or parentheses)
         const mainIngredient = ingredient.split(',')[0].split('(')[0].trim();
         const key = mainIngredient.toLowerCase();

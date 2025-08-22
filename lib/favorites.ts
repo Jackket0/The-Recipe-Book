@@ -180,12 +180,15 @@ export function importFavorites(jsonData: string): boolean {
     }
     
     // Validate structure
-    const validFavorites = favorites.filter((fav: any) => 
-      fav && 
-      typeof fav.slug === 'string' && 
-      typeof fav.title === 'string' &&
-      typeof fav.addedAt === 'string'
-    );
+    const validFavorites = favorites.filter((fav: unknown) => {
+      if (!fav || typeof fav !== 'object') return false;
+      const favorite = fav as Record<string, unknown>;
+      return (
+        typeof favorite.slug === 'string' && 
+        typeof favorite.title === 'string' &&
+        typeof favorite.addedAt === 'string'
+      );
+    });
     
     localStorage.setItem(FAVORITES_KEY, JSON.stringify(validFavorites));
     

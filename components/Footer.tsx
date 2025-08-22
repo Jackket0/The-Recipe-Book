@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 
-const Footer: React.FC = () => {
+interface FooterProps {}
+
+const Footer: React.FC<FooterProps> = () => {
   const [currentYear, setCurrentYear] = useState(2024);
   const [isClient, setIsClient] = useState(false);
 

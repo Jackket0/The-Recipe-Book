@@ -1,4 +1,5 @@
 import { Recipe } from '@/types/recipe';
+import { normalizeFractions, parseFraction, decimalToReadableFraction } from './fractions';
 
 export interface ScaledRecipe extends Omit<Recipe, 'ingredients'> {
   ingredients: string[];
@@ -8,62 +9,10 @@ export interface ScaledRecipe extends Omit<Recipe, 'ingredients'> {
 }
 
 /**
- * Common fractions and their decimal equivalents
- */
-const FRACTION_MAP: Record<string, number> = {
-  '1/8': 0.125,
-  '1/4': 0.25,
-  '1/3': 0.333,
-  '3/8': 0.375,
-  '1/2': 0.5,
-  '5/8': 0.625,
-  '2/3': 0.667,
-  '3/4': 0.75,
-  '7/8': 0.875,
-  '1 1/4': 1.25,
-  '1 1/3': 1.333,
-  '1 1/2': 1.5,
-  '1 2/3': 1.667,
-  '1 3/4': 1.75,
-  '2 1/4': 2.25,
-  '2 1/3': 2.333,
-  '2 1/2': 2.5,
-  '2 2/3': 2.667,
-  '2 3/4': 2.75,
-  '3 1/4': 3.25,
-  '3 1/3': 3.333,
-  '3 1/2': 3.5,
-  '3 2/3': 3.667,
-  '3 3/4': 3.75
-};
-
-/**
  * Convert decimal to nearest common fraction
  */
 function decimalToFraction(decimal: number): string {
-  // Find the closest fraction
-  let closestFraction = decimal.toString();
-  let minDifference = Infinity;
-  
-  for (const [fraction, value] of Object.entries(FRACTION_MAP)) {
-    const difference = Math.abs(decimal - value);
-    if (difference < minDifference) {
-      minDifference = difference;
-      closestFraction = fraction;
-    }
-  }
-  
-  // If the difference is small enough, use the fraction
-  if (minDifference < 0.05) {
-    return closestFraction;
-  }
-  
-  // Otherwise, return rounded decimal
-  if (decimal < 1) {
-    return decimal.toFixed(2).replace(/\.?0+$/, '');
-  } else {
-    return decimal.toFixed(1).replace(/\.0$/, '');
-  }
+  return decimalToReadableFraction(decimal);
 }
 
 /**
@@ -77,12 +26,13 @@ function parseIngredient(ingredient: string): {
 } {
   const original = ingredient.trim();
   
-  // Common patterns for quantities
+  // Normalize fractions in the ingredient string
+  const normalized = normalizeFractions(original);
+  
+  // Common patterns for quantities (after normalization)
   const patterns = [
-    // Fractions like "1/2 cup"
-    /^(\d+\/\d+|\d+\s+\d+\/\d+)\s*(\w+)?\s*(.*)/,
-    // Mixed numbers like "1 1/2 cups"
-    /^(\d+\s+\d+\/\d+)\s*(\w+)?\s*(.*)/,
+    // Mixed numbers like "1.5 cups" (after normalization)
+    /^(\d+\.\d+)\s*(\w+)?\s*(.*)/,
     // Decimals like "2.5 cups" or "0.5 tsp"
     /^(\d*\.?\d+)\s*(\w+)?\s*(.*)/,
     // Whole numbers like "2 cups"
@@ -90,34 +40,21 @@ function parseIngredient(ingredient: string): {
   ];
   
   for (const pattern of patterns) {
-    const match = original.match(pattern);
+    const match = normalized.match(pattern);
     if (match) {
       const [, quantityStr, unit, description] = match;
       
-      // Parse quantity (handle fractions)
-      let quantity: number;
-      if (quantityStr.includes('/')) {
-        // Handle fractions
-        if (quantityStr.includes(' ')) {
-          // Mixed fraction like "1 1/2"
-          const [whole, fraction] = quantityStr.split(' ');
-          const [num, den] = fraction.split('/');
-          quantity = parseInt(whole) + parseInt(num) / parseInt(den);
-        } else {
-          // Simple fraction like "1/2"
-          const [num, den] = quantityStr.split('/');
-          quantity = parseInt(num) / parseInt(den);
-        }
-      } else {
-        quantity = parseFloat(quantityStr);
-      }
+      // Parse quantity (now all decimals after normalization)
+      const quantity = parseFloat(quantityStr);
       
-      return {
-        quantity,
-        unit: unit || null,
-        description: description.trim(),
-        originalText: original
-      };
+      if (!isNaN(quantity)) {
+        return {
+          quantity,
+          unit: unit || null,
+          description: description.trim(),
+          originalText: original
+        };
+      }
     }
   }
   

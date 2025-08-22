@@ -3,6 +3,13 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { Recipe } from '@/types/recipe';
 
+// Type for Next.js window data
+interface NextData {
+  props?: {
+    recipes?: Recipe[];
+  };
+}
+
 interface DropdownItem {
   href: string;
   label: string;
@@ -17,7 +24,9 @@ interface NavItem {
   dropdownItems?: DropdownItem[];
 }
 
-const Header: React.FC = () => {
+interface HeaderProps {}
+
+const Header: React.FC<HeaderProps> = () => {
   const router = useRouter();
   const [isCategoryDropdownOpen, setIsCategoryDropdownOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -41,7 +50,10 @@ const Header: React.FC = () => {
     
     // Try to get recipes from window.__NEXT_DATA__ if available
     if (typeof window !== 'undefined' && (window as any).__NEXT_DATA__?.props?.recipes) {
-      setAllRecipes((window as any).__NEXT_DATA__.props.recipes);
+      const nextData = (window as any).__NEXT_DATA__ as NextData;
+      if (nextData?.props?.recipes) {
+        setAllRecipes(nextData.props.recipes);
+      }
     }
   }, [isClient]);
 

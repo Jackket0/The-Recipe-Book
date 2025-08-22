@@ -13,7 +13,7 @@ const validateRecipe = ajv.compile(recipeSchema);
 export interface ValidationError {
   field: string;
   message: string;
-  value?: any;
+  value?: unknown;
 }
 
 export interface ValidationResult {
@@ -25,7 +25,7 @@ export interface ValidationResult {
 /**
  * Validates recipe frontmatter against the JSON schema
  */
-export function validateRecipeFrontmatter(data: any): ValidationResult {
+export function validateRecipeFrontmatter(data: unknown): ValidationResult {
   const result: ValidationResult = {
     isValid: false,
     errors: [],
@@ -44,9 +44,11 @@ export function validateRecipeFrontmatter(data: any): ValidationResult {
   }
 
   // Additional custom validations and warnings
-  if (data) {
+  if (data && typeof data === 'object' && data !== null) {
+    const recipeData = data as Record<string, unknown>;
+    
     // Warning if no description provided
-    if (!data.description || data.description.trim().length === 0) {
+    if (!recipeData.description || (typeof recipeData.description === 'string' && recipeData.description.trim().length === 0)) {
       result.warnings.push({
         field: 'description',
         message: 'Description is recommended for better SEO and user experience'
@@ -54,7 +56,7 @@ export function validateRecipeFrontmatter(data: any): ValidationResult {
     }
 
     // Warning if no image provided
-    if (!data.image) {
+    if (!recipeData.image) {
       result.warnings.push({
         field: 'image',
         message: 'Image is recommended for better visual appeal'
@@ -62,7 +64,7 @@ export function validateRecipeFrontmatter(data: any): ValidationResult {
     }
 
     // Warning if no timing information
-    if (!data.prepTime && !data.cookTime) {
+    if (!recipeData.prepTime && !recipeData.cookTime) {
       result.warnings.push({
         field: 'timing',
         message: 'Preparation or cooking time is recommended for user planning'
@@ -70,7 +72,7 @@ export function validateRecipeFrontmatter(data: any): ValidationResult {
     }
 
     // Warning if no servings specified
-    if (!data.servings) {
+    if (!recipeData.servings) {
       result.warnings.push({
         field: 'servings',
         message: 'Number of servings is recommended for meal planning'
@@ -78,7 +80,7 @@ export function validateRecipeFrontmatter(data: any): ValidationResult {
     }
 
     // Warning if no difficulty specified
-    if (!data.difficulty) {
+    if (!recipeData.difficulty) {
       result.warnings.push({
         field: 'difficulty',
         message: 'Difficulty level helps users choose appropriate recipes'
@@ -86,7 +88,7 @@ export function validateRecipeFrontmatter(data: any): ValidationResult {
     }
 
     // Warning if no tags provided
-    if (!data.tags || data.tags.length === 0) {
+    if (!recipeData.tags || !Array.isArray(recipeData.tags) || recipeData.tags.length === 0) {
       result.warnings.push({
         field: 'tags',
         message: 'Tags help with recipe discovery and filtering'
@@ -94,7 +96,7 @@ export function validateRecipeFrontmatter(data: any): ValidationResult {
     }
 
     // Warning if too few ingredients
-    if (data.ingredients && data.ingredients.length < 2) {
+    if (Array.isArray(recipeData.ingredients) && recipeData.ingredients.length < 2) {
       result.warnings.push({
         field: 'ingredients',
         message: 'Most recipes have at least 2 ingredients'
@@ -102,7 +104,7 @@ export function validateRecipeFrontmatter(data: any): ValidationResult {
     }
 
     // Warning if too few instructions
-    if (data.instructions && data.instructions.length < 2) {
+    if (Array.isArray(recipeData.instructions) && recipeData.instructions.length < 2) {
       result.warnings.push({
         field: 'instructions',
         message: 'Most recipes have at least 2 instruction steps'
@@ -110,9 +112,9 @@ export function validateRecipeFrontmatter(data: any): ValidationResult {
     }
 
     // Check for common ingredient format issues
-    if (data.ingredients) {
-      data.ingredients.forEach((ingredient: string, index: number) => {
-        if (ingredient && !ingredient.match(/^\d+|^[a-zA-Z]/)) {
+    if (Array.isArray(recipeData.ingredients)) {
+      recipeData.ingredients.forEach((ingredient: unknown, index: number) => {
+        if (typeof ingredient === 'string' && ingredient && !ingredient.match(/^\d+|^[a-zA-Z]/)) {
           result.warnings.push({
             field: `ingredients[${index}]`,
             message: 'Ingredient should start with quantity or name',
@@ -130,7 +132,7 @@ export function validateRecipeFrontmatter(data: any): ValidationResult {
 /**
  * Type guard to check if data matches RecipeFrontMatter interface
  */
-export function isValidRecipeFrontMatter(data: any): data is RecipeFrontMatter {
+export function isValidRecipeFrontMatter(data: unknown): data is RecipeFrontMatter {
   const validation = validateRecipeFrontmatter(data);
   return validation.isValid;
 }
