@@ -2,6 +2,7 @@ import React from 'react';
 import { useRouter } from 'next/router';
 import { Recipe } from '@/types/recipe';
 import { CategoryBadge, TagBadgeSmall } from './CategoryBadge';
+import FavoriteButton from './FavoriteButton';
 
 interface RecipeCardProps {
   recipe: Recipe;
@@ -28,6 +29,15 @@ const RecipeCard: React.FC<RecipeCardProps> = ({ recipe }) => {
     >
         {/* Image */}
         <div className="relative h-48 w-full">
+          {/* Favorite button overlay */}
+          <div className="absolute top-2 right-2 z-10">
+            <FavoriteButton 
+              recipeSlug={recipe.slug} 
+              recipeTitle={recipe.title}
+              size="md"
+              className="bg-white/80 backdrop-blur-sm hover:bg-white/90"
+            />
+          </div>
           {recipe.image ? (
             <img
               src={recipe.image}

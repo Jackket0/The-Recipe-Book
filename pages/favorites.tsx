@@ -1,16 +1,50 @@
 import { GetStaticProps } from 'next';
+import { useState, useEffect } from 'react';
 import Layout from '@/components/Layout';
 import RecipeCard from '@/components/RecipeCard';
 import { Recipe } from '@/types/recipe';
 import { getAllRecipes } from '@/lib/recipes';
+import { getFavorites } from '@/lib/favorites';
 
 interface FavoritesProps {
   recipes: Recipe[];
 }
 
 export default function Favorites({ recipes }: FavoritesProps): JSX.Element {
-  // For now, show all recipes. In the future, this could be filtered based on user favorites
-  const favoriteRecipes = recipes.slice(0, 9);
+  const [favoriteRecipes, setFavoriteRecipes] = useState<Recipe[]>([]);
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+    
+    // Get favorite recipe slugs from localStorage
+    const favorites = getFavorites();
+    const favoriteSlugs = favorites.map(fav => fav.slug);
+    
+    // Filter recipes to only show favorites
+    const filteredRecipes = recipes.filter(recipe => 
+      favoriteSlugs.includes(recipe.slug)
+    );
+    
+    setFavoriteRecipes(filteredRecipes);
+  }, [recipes]);
+
+  // Listen for favorites changes
+  useEffect(() => {
+    const handleFavoritesChange = () => {
+      const favorites = getFavorites();
+      const favoriteSlugs = favorites.map(fav => fav.slug);
+      const filteredRecipes = recipes.filter(recipe => 
+        favoriteSlugs.includes(recipe.slug)
+      );
+      setFavoriteRecipes(filteredRecipes);
+    };
+
+    window.addEventListener('favoritesChanged', handleFavoritesChange);
+    return () => {
+      window.removeEventListener('favoritesChanged', handleFavoritesChange);
+    };
+  }, [recipes]);
 
   return (
     <Layout
@@ -30,7 +64,13 @@ export default function Favorites({ recipes }: FavoritesProps): JSX.Element {
           </div>
 
           {/* Favorites Grid */}
-          {favoriteRecipes.length > 0 ? (
+          {!isClient ? (
+            // Loading state while client-side hydration happens
+            <div className="text-center py-16">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-600 mx-auto"></div>
+              <p className="mt-4 text-gray-600">Loading your favorites...</p>
+            </div>
+          ) : favoriteRecipes.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {favoriteRecipes.map((recipe) => (
                 <RecipeCard key={recipe.slug} recipe={recipe} />
@@ -54,7 +94,7 @@ export default function Favorites({ recipes }: FavoritesProps): JSX.Element {
                 </svg>
               </div>
               <h3 className="text-2xl font-semibold text-gray-900 mb-4">
-                No favorites yet
+                No favorites found
               </h3>
               <p className="text-gray-600 mb-6 max-w-md mx-auto">
                 Start exploring our recipes and add your favorites to see them here.

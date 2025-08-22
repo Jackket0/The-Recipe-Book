@@ -1,0 +1,311 @@
+/* Print styles for recipe pages */
+@media print {
+  /* Hide navigation and non-essential elements */
+  header,
+  nav,
+  .navigation,
+  .breadcrumbs,
+  .search-bar,
+  .sidebar,
+  .comments,
+  .social-share,
+  .back-button,
+  .print-button,
+  .favorites-button,
+  .scale-controls,
+  footer,
+  .footer {
+    display: none !important;
+  }
+
+  /* Reset page margins and layout */
+  * {
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+
+  body {
+    font-family: 'Times New Roman', Times, serif !important;
+    font-size: 12pt !important;
+    line-height: 1.4 !important;
+    color: #000 !important;
+    background: #fff !important;
+    margin: 0 !important;
+    padding: 20px !important;
+  }
+
+  /* Page layout */
+  .recipe-container,
+  .recipe-content,
+  main {
+    width: 100% !important;
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: #fff !important;
+    box-shadow: none !important;
+    border: none !important;
+  }
+
+  /* Recipe title */
+  .recipe-title,
+  h1 {
+    font-size: 24pt !important;
+    font-weight: bold !important;
+    margin: 0 0 12pt 0 !important;
+    color: #000 !important;
+    page-break-after: avoid !important;
+  }
+
+  /* Recipe metadata */
+  .recipe-meta,
+  .recipe-info {
+    margin: 12pt 0 !important;
+    padding: 8pt !important;
+    border: 1px solid #ccc !important;
+    background: #f9f9f9 !important;
+    page-break-inside: avoid !important;
+  }
+
+  .recipe-meta p,
+  .recipe-info p {
+    margin: 4pt 0 !important;
+    font-size: 11pt !important;
+  }
+
+  /* Ingredients section */
+  .ingredients-section {
+    margin: 16pt 0 !important;
+    page-break-inside: avoid !important;
+  }
+
+  .ingredients-title,
+  h2 {
+    font-size: 18pt !important;
+    font-weight: bold !important;
+    margin: 16pt 0 8pt 0 !important;
+    color: #000 !important;
+    border-bottom: 2px solid #000 !important;
+    padding-bottom: 4pt !important;
+    page-break-after: avoid !important;
+  }
+
+  .ingredients-list,
+  ul {
+    margin: 8pt 0 8pt 20pt !important;
+    padding: 0 !important;
+  }
+
+  .ingredients-list li,
+  ul li {
+    margin: 4pt 0 !important;
+    font-size: 11pt !important;
+    line-height: 1.3 !important;
+    list-style-type: disc !important;
+  }
+
+  /* Instructions section */
+  .instructions-section {
+    margin: 16pt 0 !important;
+  }
+
+  .instructions-title {
+    font-size: 18pt !important;
+    font-weight: bold !important;
+    margin: 16pt 0 8pt 0 !important;
+    color: #000 !important;
+    border-bottom: 2px solid #000 !important;
+    padding-bottom: 4pt !important;
+    page-break-after: avoid !important;
+  }
+
+  .instructions-list,
+  ol {
+    margin: 8pt 0 8pt 20pt !important;
+    padding: 0 !important;
+    counter-reset: step-counter !important;
+  }
+
+  .instructions-list li,
+  ol li {
+    margin: 8pt 0 !important;
+    font-size: 11pt !important;
+    line-height: 1.4 !important;
+    list-style: none !important;
+    counter-increment: step-counter !important;
+    position: relative !important;
+    padding-left: 20pt !important;
+  }
+
+  .instructions-list li::before,
+  ol li::before {
+    content: counter(step-counter) ". " !important;
+    position: absolute !important;
+    left: 0 !important;
+    font-weight: bold !important;
+    color: #000 !important;
+  }
+
+  /* Recipe description/content */
+  .recipe-description,
+  .recipe-content p {
+    margin: 8pt 0 !important;
+    font-size: 11pt !important;
+    line-height: 1.4 !important;
+  }
+
+  /* Headings in recipe content */
+  h3 {
+    font-size: 14pt !important;
+    font-weight: bold !important;
+    margin: 12pt 0 6pt 0 !important;
+    color: #000 !important;
+    page-break-after: avoid !important;
+  }
+
+  h4 {
+    font-size: 12pt !important;
+    font-weight: bold !important;
+    margin: 10pt 0 4pt 0 !important;
+    color: #000 !important;
+    page-break-after: avoid !important;
+  }
+
+  /* Images */
+  .recipe-image,
+  img {
+    max-width: 100% !important;
+    height: auto !important;
+    margin: 12pt 0 !important;
+    page-break-inside: avoid !important;
+  }
+
+  /* Hide recipe image on print to save space */
+  .recipe-header-image {
+    display: none !important;
+  }
+
+  /* Tables (if any) */
+  table {
+    width: 100% !important;
+    border-collapse: collapse !important;
+    margin: 12pt 0 !important;
+    font-size: 10pt !important;
+  }
+
+  th,
+  td {
+    border: 1px solid #000 !important;
+    padding: 4pt !important;
+    text-align: left !important;
+  }
+
+  th {
+    background: #f0f0f0 !important;
+    font-weight: bold !important;
+  }
+
+  /* Page breaks */
+  .page-break-before {
+    page-break-before: always !important;
+  }
+
+  .page-break-after {
+    page-break-after: always !important;
+  }
+
+  .page-break-inside-avoid {
+    page-break-inside: avoid !important;
+  }
+
+  /* Recipe tags/categories */
+  .recipe-tags,
+  .recipe-category {
+    margin: 8pt 0 !important;
+    font-size: 10pt !important;
+  }
+
+  .tag,
+  .category-badge {
+    display: inline !important;
+    margin-right: 8pt !important;
+    padding: 2pt 4pt !important;
+    border: 1px solid #ccc !important;
+    background: #f5f5f5 !important;
+  }
+
+  /* Footer information for print */
+  .print-footer {
+    position: fixed !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    height: 30pt !important;
+    font-size: 9pt !important;
+    text-align: center !important;
+    border-top: 1px solid #ccc !important;
+    background: #fff !important;
+    padding: 4pt !important;
+  }
+
+  /* Recipe scaling information */
+  .scaling-info {
+    margin: 8pt 0 !important;
+    padding: 6pt !important;
+    border: 1px solid #999 !important;
+    background: #f0f0f0 !important;
+    font-size: 10pt !important;
+    font-style: italic !important;
+  }
+
+  /* Ensure proper spacing */
+  .recipe-section {
+    margin: 16pt 0 !important;
+  }
+
+  /* Links */
+  a {
+    color: #000 !important;
+    text-decoration: none !important;
+  }
+
+  a[href^="http"]:after {
+    content: " (" attr(href) ")" !important;
+    font-size: 9pt !important;
+    font-style: italic !important;
+  }
+
+  /* Code blocks */
+  code,
+  pre {
+    font-family: 'Courier New', Courier, monospace !important;
+    font-size: 10pt !important;
+    background: #f5f5f5 !important;
+    padding: 2pt !important;
+    border: 1px solid #ddd !important;
+  }
+
+  /* Blockquotes */
+  blockquote {
+    margin: 8pt 20pt !important;
+    padding: 6pt !important;
+    border-left: 3px solid #ccc !important;
+    font-style: italic !important;
+    background: #f9f9f9 !important;
+  }
+}
+
+/* Print-specific utility classes */
+.print-only {
+  display: none;
+}
+
+@media print {
+  .print-only {
+    display: block !important;
+  }
+  
+  .no-print {
+    display: none !important;
+  }
+}

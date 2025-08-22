@@ -5,6 +5,7 @@ import { remark } from 'remark';
 import html from 'remark-html';
 import { Recipe, RecipeFrontMatter, MainCategory, RecipeTag } from '@/types/recipe';
 import { MAIN_CATEGORIES, getAllTags, getTagInfo } from './categories';
+import { validateRecipeFrontmatter, ValidationResult } from './validation';
 
 const recipesDirectory: string = path.join(process.cwd(), 'content/recipes');
 
@@ -35,7 +36,20 @@ export async function getRecipeBySlug(slug: string): Promise<Recipe | null> {
     
     const frontMatter: RecipeFrontMatter = data as RecipeFrontMatter;
     
-    // Validate category
+    // Validate recipe frontmatter using JSON schema
+    const validation: ValidationResult = validateRecipeFrontmatter(data);
+    
+    if (!validation.isValid) {
+      console.error(`Recipe validation failed for ${slug}:`, validation.errors);
+      return null;
+    }
+    
+    // Log warnings if any
+    if (validation.warnings.length > 0) {
+      console.warn(`Recipe warnings for ${slug}:`, validation.warnings);
+    }
+    
+    // Validate category (additional check)
     if (!frontMatter.category || !(frontMatter.category in MAIN_CATEGORIES)) {
       console.warn(`Invalid category "${frontMatter.category}" in recipe ${slug}`);
       return null;
@@ -159,7 +173,7 @@ export async function getTagsWithCount(): Promise<{ tag: RecipeTag; count: numbe
     .sort((a: { tag: RecipeTag; count: number }, b: { tag: RecipeTag; count: number }): number => b.count - a.count);
 }
 
-// Search recipes by multiple criteria
+// Search recipes by multiple criteria (legacy function for backward compatibility)
 export async function searchRecipes(filters: {
   category?: MainCategory;
   tags?: RecipeTag[];

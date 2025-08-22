@@ -6,18 +6,10 @@ __For me__
 2.Add/Change recipes from Notion.
     Use AI to create within the template.
 
-3. Ask AI when the change from .MD files too a database.
-
-4.Add/Change recipes from Notion.
-    Use AI to create within the template.
 
 5. Make sure its mobile viewer friendly. 
 
 6. Ask and update this list for future features and updates.
-
-7. Update the full README.md
-
-8. Update the full Categories.md
 
 __Changes to Pages__
 
@@ -32,8 +24,6 @@ __New Features__
     -add suggested values to the recipe-template.md if required. 
 
 3. Add nutritional information that also scales with the servings toggle.
-
-4.Ask AI when the change from .MD files too a database.
 
 5.Add cocktails, Drinks,
 

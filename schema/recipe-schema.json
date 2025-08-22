@@ -1,0 +1,159 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Recipe Schema",
+  "description": "Schema for validating recipe frontmatter in The Recipe Book",
+  "type": "object",
+  "required": ["title", "category", "ingredients", "instructions"],
+  "properties": {
+    "title": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 200,
+      "description": "Recipe name"
+    },
+    "description": {
+      "type": "string",
+      "maxLength": 500,
+      "description": "Brief description for cards and SEO"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "Mains",
+        "Sides", 
+        "Snacks",
+        "Breakfast & Brunch",
+        "Lunch",
+        "Dinner",
+        "Desserts",
+        "Baking",
+        "Mocktails",
+        "Cocktails",
+        "Smoothies & Juices",
+        "Shakes"
+      ],
+      "description": "Main recipe category (required)"
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "Vegetarian",
+          "Vegan",
+          "Gluten-Free",
+          "Dairy-Free",
+          "Keto / Low Carb",
+          "High Protein",
+          "Low Calorie",
+          "Low Fat",
+          "Italian",
+          "Indian",
+          "Chinese",
+          "Japanese",
+          "Mediterranean",
+          "Middle Eastern",
+          "Mexican",
+          "British",
+          "American",
+          "Quick Meals",
+          "Meal Prep",
+          "Comfort Food",
+          "Party Food",
+          "Kids Friendly",
+          "Seasonal"
+        ]
+      },
+      "uniqueItems": true,
+      "maxItems": 10,
+      "description": "Array of dietary, cuisine, or occasion tags"
+    },
+    "image": {
+      "type": "string",
+      "format": "uri-reference",
+      "description": "URL or path to recipe image"
+    },
+    "prepTime": {
+      "type": "string",
+      "pattern": "^\\d+\\s*(minutes?|mins?|hours?|hrs?)$",
+      "description": "Preparation time (e.g., '15 minutes', '1 hour')"
+    },
+    "cookTime": {
+      "type": "string",
+      "pattern": "^\\d+(-\\d+)?\\s*(minutes?|mins?|hours?|hrs?)$",
+      "description": "Cooking time (e.g., '30 minutes', '60-65 minutes')"
+    },
+    "servings": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 50,
+      "description": "Number of servings"
+    },
+    "difficulty": {
+      "type": "string",
+      "enum": ["Easy", "Medium", "Hard"],
+      "description": "Recipe difficulty level"
+    },
+    "ingredients": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 200
+      },
+      "minItems": 1,
+      "maxItems": 50,
+      "description": "Array of ingredients"
+    },
+    "instructions": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 1000
+      },
+      "minItems": 1,
+      "maxItems": 30,
+      "description": "Array of step-by-step instructions"
+    },
+    "dateCreated": {
+      "type": "string",
+      "format": "date",
+      "description": "Creation date (YYYY-MM-DD)"
+    },
+    "dateModified": {
+      "type": "string",
+      "format": "date",
+      "description": "Last modified date (YYYY-MM-DD)"
+    },
+    "nutrition": {
+      "type": "object",
+      "properties": {
+        "calories": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 5000
+        },
+        "protein": {
+          "type": "number",
+          "minimum": 0
+        },
+        "carbs": {
+          "type": "number",
+          "minimum": 0
+        },
+        "fat": {
+          "type": "number",
+          "minimum": 0
+        },
+        "fiber": {
+          "type": "number",
+          "minimum": 0
+        }
+      },
+      "additionalProperties": false,
+      "description": "Optional nutritional information per serving"
+    }
+  },
+  "additionalProperties": false
+}
