@@ -3,7 +3,8 @@ import path from 'path';
 import matter from 'gray-matter';
 import { remark } from 'remark';
 import html from 'remark-html';
-import { Recipe, RecipeFrontMatter } from '@/types/recipe';
+import { Recipe, RecipeFrontMatter, MainCategory, CategoryStructure } from '@/types/recipe';
+import { MAIN_CATEGORIES, DIETARY_CATEGORIES, CUISINE_CATEGORIES, DRINK_CATEGORIES } from './categories';
 
 const recipesDirectory = path.join(process.cwd(), 'content/recipes');
 
@@ -39,6 +40,8 @@ export async function getRecipeBySlug(slug: string): Promise<Recipe | null> {
       title: frontMatter.title,
       description: frontMatter.description || null,
       category: frontMatter.category,
+      mainCategory: frontMatter.mainCategory || null,
+      categoryStructure: frontMatter.categoryStructure || null,
       image: frontMatter.image || null,
       prepTime: frontMatter.prepTime || null,
       cookTime: frontMatter.cookTime || null,
@@ -87,4 +90,72 @@ export async function getCategories(): Promise<string[]> {
     new Set(recipes.map((recipe: Recipe): string => recipe.category))
   );
   return categories.sort();
+}
+
+// New category-specific functions
+export async function getRecipesByMainCategory(mainCategory: MainCategory): Promise<Recipe[]> {
+  const recipes = await getAllRecipes();
+  return recipes.filter((recipe: Recipe): boolean => 
+    recipe.mainCategory === mainCategory ||
+    // Fallback for backward compatibility
+    recipe.category.toLowerCase() === mainCategory.toLowerCase()
+  );
+}
+
+export async function getRecipesByDietaryCategory(dietaryCategory: string): Promise<Recipe[]> {
+  const recipes = await getAllRecipes();
+  return recipes.filter((recipe: Recipe): boolean => 
+    recipe.categoryStructure?.dietary?.some(dietary => dietary === dietaryCategory) ||
+    recipe.tags?.some(tag => tag.toLowerCase().includes(dietaryCategory.toLowerCase())) ||
+    recipe.category.toLowerCase().includes(dietaryCategory.toLowerCase())
+  );
+}
+
+export async function getRecipesByCuisine(cuisine: string): Promise<Recipe[]> {
+  const recipes = await getAllRecipes();
+  return recipes.filter((recipe: Recipe): boolean => 
+    recipe.categoryStructure?.cuisine === cuisine ||
+    recipe.tags?.some((tag: string): boolean => tag.toLowerCase().includes(cuisine.toLowerCase())) ||
+    recipe.category.toLowerCase().includes(cuisine.toLowerCase())
+  );
+}
+
+export async function getRecipesByDrinkType(drinkType: string): Promise<Recipe[]> {
+  const recipes = await getAllRecipes();
+  return recipes.filter((recipe: Recipe): boolean => 
+    recipe.categoryStructure?.drinkType === drinkType ||
+    recipe.tags?.some((tag: string): boolean => tag.toLowerCase().includes(drinkType.toLowerCase())) ||
+    recipe.category.toLowerCase().includes(drinkType.toLowerCase()) ||
+    recipe.title.toLowerCase().includes(drinkType.toLowerCase())
+  );
+}
+
+export async function getMainCategories(): Promise<MainCategory[]> {
+  const recipes = await getAllRecipes();
+  const mainCategories = new Set<MainCategory>();
+  
+  recipes.forEach(recipe => {
+    if (recipe.mainCategory) {
+      mainCategories.add(recipe.mainCategory);
+    }
+    // Map existing categories to main categories
+    const category = recipe.category.toLowerCase();
+    if (category.includes('main') || category.includes('dinner') || category.includes('entree')) {
+      mainCategories.add('Mains');
+    } else if (category.includes('side')) {
+      mainCategories.add('Sides');
+    } else if (category.includes('drink') || category.includes('beverage')) {
+      mainCategories.add('Drinks');
+    } else if (category.includes('dessert') || category.includes('sweet')) {
+      mainCategories.add('Desserts');
+    } else if (category.includes('appetizer') || category.includes('starter')) {
+      mainCategories.add('Appetizers');
+    } else if (category.includes('breakfast')) {
+      mainCategories.add('Breakfast');
+    } else if (category.includes('lunch')) {
+      mainCategories.add('Lunch');
+    }
+  });
+  
+  return Array.from(mainCategories).sort();
 }

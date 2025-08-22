@@ -4,7 +4,8 @@ import Link from 'next/link';
 import Layout from '@/components/Layout';
 import RecipeCard from '@/components/RecipeCard';
 import { Recipe } from '@/types/recipe';
-import { getAllRecipes, getCategories } from '@/lib/recipes';
+import { getAllRecipes, getCategories, getRecipesByMainCategory } from '@/lib/recipes';
+import { MAIN_CATEGORIES, getCategoryInfo } from '@/lib/categories';
 
 interface CategoryPageProps {
   recipes: Recipe[];

@@ -6,7 +6,7 @@ interface NavItem {
   href: string;
   label: string;
   hasDropdown?: boolean;
-  dropdownItems?: { href: string; label: string }[];
+  dropdownItems?: { href: string; label: string; isHeader?: boolean; isSeparator?: boolean }[];
 }
 
 const Header: React.FC = () => {
@@ -30,23 +30,59 @@ const Header: React.FC = () => {
   }, []);
 
   const categories = [
-    { href: '/recipes/category/mains', label: 'Mains' },
+    // Main Categories
+    { href: '/recipes/category/mains', label: 'Mains', isHeader: true },
     { href: '/recipes/category/sides', label: 'Sides' },
     { href: '/recipes/category/desserts', label: 'Desserts' },
+    { href: '/recipes/category/appetizers', label: 'Appetizers' },
     { href: '/recipes/category/breakfast', label: 'Breakfast' },
     { href: '/recipes/category/lunch', label: 'Lunch' },
     { href: '/recipes/category/dinner', label: 'Dinner' },
-    { href: '/recipes/category/snacks', label: 'Snacks' },
-    { href: '/recipes/category/drinks', label: 'Drinks' },
+    
+    // Separator
+    { href: '#', label: '---', isSeparator: true },
+    
+    // Dietary Categories
+    { href: '/recipes/dietary/high-protein', label: 'High Protein', isHeader: true },
+    { href: '/recipes/dietary/low-calorie', label: 'Low Calorie' },
+    { href: '/recipes/dietary/vegetarian', label: 'Vegetarian' },
+    { href: '/recipes/dietary/vegan', label: 'Vegan' },
+    { href: '/recipes/dietary/keto', label: 'Keto' },
+    
+    // Separator
+    { href: '#', label: '---', isSeparator: true },
+    
+    // Cuisine Categories
+    { href: '/recipes/cuisine/italian', label: 'Italian', isHeader: true },
+    { href: '/recipes/cuisine/mexican', label: 'Mexican' },
+    { href: '/recipes/cuisine/asian', label: 'Asian' },
+    { href: '/recipes/cuisine/indian', label: 'Indian' },
+    { href: '/recipes/cuisine/mediterranean', label: 'Mediterranean' },
+    
+    // Separator
+    { href: '#', label: '---', isSeparator: true },
+    
+    // Drink Categories
+    { href: '/recipes/drinks/cocktail', label: 'Cocktails', isHeader: true },
+    { href: '/recipes/drinks/mocktail', label: 'Mocktails' },
+    { href: '/recipes/drinks/smoothie', label: 'Smoothies' },
+    { href: '/recipes/drinks/hot-drinks', label: 'Hot Drinks' },
   ];
 
   const navItems: NavItem[] = [
-    { href: '/recipes', label: 'RECIPES' },
+    { href: '/', label: 'HOME' },
+    { href: '/favorites', label: 'FAVORITES' },
+    { href: '/recipes', label: 'FOOD RECIPES' },
+    { href: '/drinks', label: 'DRINK RECIPES' },
     { 
-      href: '/recipes/category', 
+      href: '/categories', 
       label: 'BY CATEGORY',
       hasDropdown: true,
-      dropdownItems: categories
+      dropdownItems: [
+        { href: '/categories', label: 'All Categories', isHeader: true },
+        { href: '#', label: '---', isSeparator: true },
+        ...categories
+      ]
     },
     { href: '/about', label: 'ABOUT' },
   ];
@@ -55,15 +91,15 @@ const Header: React.FC = () => {
     <header className="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Top section with logo, search, and social icons */}
-        <div className="flex justify-between items-center h-20">
+        <div className="flex justify-between items-center h-16 lg:h-18">
           {/* Logo */}
           <Link href="/" className="flex items-center">
             <div className="flex items-center">
-              <div className="w-12 h-12 bg-gradient-to-r from-orange-400 to-red-500 rounded-full flex items-center justify-center mr-3">
-                <span className="text-white text-xl font-bold">🍳</span>
+              <div className="w-10 h-10 lg:w-12 lg:h-12 bg-gradient-to-r from-orange-400 to-red-500 rounded-full flex items-center justify-center mr-2 lg:mr-3">
+                <span className="text-white text-lg lg:text-xl font-bold">🍳</span>
               </div>
               <div>
-                <div className="text-2xl font-bold leading-tight">
+                <div className="text-xl lg:text-2xl font-bold leading-tight">
                   <span className="text-orange-600">the</span>
                   <span className="text-red-600">recipe</span>
                   <span className="text-orange-500">book</span>
@@ -73,7 +109,7 @@ const Header: React.FC = () => {
           </Link>
 
           {/* Search Bar - Desktop */}
-          <div className="hidden lg:flex flex-1 max-w-lg mx-8">
+          <div className="hidden md:flex flex-1 max-w-lg mx-4 lg:mx-8">
             <div className="relative w-full">
               <input
                 type="text"
@@ -89,7 +125,7 @@ const Header: React.FC = () => {
           </div>
 
           {/* Social Icons */}
-          <div className="hidden lg:flex items-center space-x-4">
+          <div className="hidden lg:flex items-center space-x-3 xl:space-x-4">
             <a href="#" className="text-gray-500 hover:text-orange-500 transition-colors">
               <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"/>
@@ -108,7 +144,7 @@ const Header: React.FC = () => {
           </div>
 
           {/* Mobile menu button */}
-          <div className="lg:hidden">
+          <div className="md:hidden">
             <button
               type="button"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
@@ -131,14 +167,14 @@ const Header: React.FC = () => {
         </div>
 
         {/* Navigation Menu - Desktop */}
-        <nav className="hidden lg:flex items-center justify-center space-x-12 py-4 border-t border-gray-100">
+        <nav className="hidden md:flex items-center justify-center space-x-4 lg:space-x-6 xl:space-x-8 py-3 border-t border-gray-100 overflow-x-auto">
           {navItems.map((item) => (
             <div key={item.href} className="relative">
               {item.hasDropdown ? (
                 <div ref={dropdownRef} className="relative">
                   <button
                     onClick={() => setIsCategoryDropdownOpen(!isCategoryDropdownOpen)}
-                    className="text-sm font-bold tracking-wide transition-colors duration-200 hover:text-orange-600 text-gray-700 flex items-center"
+                    className="text-xs lg:text-sm font-bold tracking-wide transition-colors duration-200 hover:text-orange-600 text-gray-700 flex items-center whitespace-nowrap"
                   >
                     {item.label}
                     <svg
@@ -152,18 +188,39 @@ const Header: React.FC = () => {
                   </button>
                   
                   {isCategoryDropdownOpen && (
-                    <div className="absolute top-full left-0 mt-2 w-48 bg-white rounded-lg shadow-xl border border-gray-200 z-50">
+                    <div className="absolute top-full left-0 mt-2 w-56 bg-white rounded-lg shadow-xl border border-gray-200 z-50 max-h-96 overflow-y-auto">
                       <div className="py-2">
-                        {item.dropdownItems?.map((dropdownItem) => (
-                          <Link
-                            key={dropdownItem.href}
-                            href={dropdownItem.href}
-                            className="block px-4 py-2 text-sm text-gray-700 hover:bg-orange-50 hover:text-orange-600 transition-colors"
-                            onClick={() => setIsCategoryDropdownOpen(false)}
-                          >
-                            {dropdownItem.label}
-                          </Link>
-                        ))}
+                        {item.dropdownItems?.map((dropdownItem, index) => {
+                          if (dropdownItem.isSeparator) {
+                            return (
+                              <div key={index} className="border-t border-gray-100 my-1"></div>
+                            );
+                          }
+                          
+                          if (dropdownItem.isHeader) {
+                            return (
+                              <Link
+                                key={dropdownItem.href}
+                                href={dropdownItem.href}
+                                className="block px-4 py-2 text-sm font-semibold text-orange-600 hover:bg-orange-50 transition-colors"
+                                onClick={() => setIsCategoryDropdownOpen(false)}
+                              >
+                                {dropdownItem.label}
+                              </Link>
+                            );
+                          }
+                          
+                          return (
+                            <Link
+                              key={dropdownItem.href}
+                              href={dropdownItem.href}
+                              className="block px-4 py-2 text-sm text-gray-700 hover:bg-orange-50 hover:text-orange-600 transition-colors pl-6"
+                              onClick={() => setIsCategoryDropdownOpen(false)}
+                            >
+                              {dropdownItem.label}
+                            </Link>
+                          );
+                        })}
                       </div>
                     </div>
                   )}
@@ -171,7 +228,7 @@ const Header: React.FC = () => {
               ) : (
                 <Link
                   href={item.href}
-                  className={`text-sm font-bold tracking-wide transition-colors duration-200 hover:text-orange-600 ${
+                  className={`text-xs lg:text-sm font-bold tracking-wide transition-colors duration-200 hover:text-orange-600 whitespace-nowrap ${
                     router.pathname === item.href
                       ? 'text-orange-600'
                       : 'text-gray-700'
@@ -186,7 +243,7 @@ const Header: React.FC = () => {
 
         {/* Mobile Menu */}
         {isMobileMenuOpen && (
-          <div className="lg:hidden">
+          <div className="md:hidden">
             <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 border-t border-gray-100">
               {/* Mobile Search */}
               <div className="mb-4">

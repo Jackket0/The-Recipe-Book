@@ -19,10 +19,10 @@ export default function Home({ recipes }: HomeProps): JSX.Element {
       description="Discover a collection of mouth-watering recipes from around the world. From quick weeknight dinners to special occasion treats."
     >
       {/* Main Content Area */}
-      <div className="bg-gray-50 min-h-screen pt-8">
+      <div className="bg-gray-50 min-h-screen pt-4 lg:pt-6">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Welcome Section */}
-          <div className="text-center mb-12">
+          <div className="text-center mb-8 lg:mb-10">
             <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
               Welcome to <span className="text-orange-600">The Recipe Book</span>
             </h1>
@@ -35,9 +35,9 @@ export default function Home({ recipes }: HomeProps): JSX.Element {
       </div>
 
       {/* Featured Recipes */}
-      <section className="py-16">
+      <section className="py-8 lg:py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
+          <div className="text-center mb-8 lg:mb-10">
             <h2 className="text-3xl font-bold text-gray-900 mb-4">
               Featured Recipes
             </h2>
