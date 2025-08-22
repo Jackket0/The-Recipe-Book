@@ -30,43 +30,20 @@ const Header: React.FC = () => {
   }, []);
 
   const categories = [
-    // Main Categories
-    { href: '/recipes/category/mains', label: 'Mains', isHeader: true },
-    { href: '/recipes/category/sides', label: 'Sides' },
-    { href: '/recipes/category/desserts', label: 'Desserts' },
-    { href: '/recipes/category/appetizers', label: 'Appetizers' },
-    { href: '/recipes/category/breakfast', label: 'Breakfast' },
+    // Actual recipe categories based on content
+    { href: '/recipes/category/breakfast', label: 'Breakfast', isHeader: true },
     { href: '/recipes/category/lunch', label: 'Lunch' },
     { href: '/recipes/category/dinner', label: 'Dinner' },
+    { href: '/recipes/category/main-dishes', label: 'Main Dishes' },
     
     // Separator
     { href: '#', label: '---', isSeparator: true },
     
-    // Dietary Categories
-    { href: '/recipes/dietary/high-protein', label: 'High Protein', isHeader: true },
-    { href: '/recipes/dietary/low-calorie', label: 'Low Calorie' },
-    { href: '/recipes/dietary/vegetarian', label: 'Vegetarian' },
-    { href: '/recipes/dietary/vegan', label: 'Vegan' },
-    { href: '/recipes/dietary/keto', label: 'Keto' },
-    
-    // Separator
-    { href: '#', label: '---', isSeparator: true },
-    
-    // Cuisine Categories
-    { href: '/recipes/cuisine/italian', label: 'Italian', isHeader: true },
-    { href: '/recipes/cuisine/mexican', label: 'Mexican' },
-    { href: '/recipes/cuisine/asian', label: 'Asian' },
-    { href: '/recipes/cuisine/indian', label: 'Indian' },
-    { href: '/recipes/cuisine/mediterranean', label: 'Mediterranean' },
-    
-    // Separator
-    { href: '#', label: '---', isSeparator: true },
-    
-    // Drink Categories
-    { href: '/recipes/drinks/cocktail', label: 'Cocktails', isHeader: true },
-    { href: '/recipes/drinks/mocktail', label: 'Mocktails' },
-    { href: '/recipes/drinks/smoothie', label: 'Smoothies' },
-    { href: '/recipes/drinks/hot-drinks', label: 'Hot Drinks' },
+    // Other Categories
+    { href: '/recipes/category/desserts', label: 'Desserts', isHeader: true },
+    { href: '/recipes/category/baked-goods', label: 'Baked Goods' },
+    { href: '/recipes/category/salads', label: 'Salads' },
+    { href: '/recipes/category/soup', label: 'Soup' },
   ];
 
   const navItems: NavItem[] = [
@@ -88,7 +65,7 @@ const Header: React.FC = () => {
   ];
 
   return (
-    <header className="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-[60]">
+    <header className="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-[1000]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Top section with logo, search, and social icons */}
         <div className="flex justify-between items-center h-16 lg:h-18">
@@ -171,7 +148,7 @@ const Header: React.FC = () => {
           {navItems.map((item) => (
             <div key={item.href} className="relative">
               {item.hasDropdown ? (
-                <div ref={dropdownRef} className="relative">
+                <div ref={dropdownRef} className="relative z-[1050]">
                   <button
                     onClick={() => setIsCategoryDropdownOpen(!isCategoryDropdownOpen)}
                     className="text-xs lg:text-sm font-bold tracking-wide transition-colors duration-200 hover:text-orange-600 text-gray-700 flex items-center whitespace-nowrap"
@@ -188,7 +165,7 @@ const Header: React.FC = () => {
                   </button>
                   
                   {isCategoryDropdownOpen && (
-                    <div className="absolute top-full left-0 mt-2 w-56 bg-white rounded-lg shadow-xl border border-gray-200 z-[100] max-h-96 overflow-y-auto">
+                    <div className="absolute top-full left-0 mt-2 w-56 bg-white rounded-lg shadow-xl border border-gray-200 z-[1100] max-h-96 overflow-y-auto isolate">
                       <div className="py-2">
                         {item.dropdownItems?.map((dropdownItem, index) => {
                           if (dropdownItem.isSeparator) {

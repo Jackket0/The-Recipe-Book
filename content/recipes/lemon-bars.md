@@ -1,7 +1,7 @@
 ---
 title: "Tangy Lemon Bars"
 description: "Bright, tangy lemon bars with a buttery shortbread crust and smooth lemon curd filling. The perfect balance of sweet and tart."
-category: "Dessert"
+category: "Desserts"
 image: "/images/lemon-bars.jpg"
 prepTime: "20 minutes"
 cookTime: "45 minutes"
