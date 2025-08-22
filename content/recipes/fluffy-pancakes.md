@@ -2,7 +2,7 @@
 title: "Fluffy Pancakes"
 description: "Light, airy, and incredibly fluffy pancakes that are perfect for weekend breakfast or brunch. Easy to make with pantry staples."
 category: "Breakfast"
-image: "/public/images/fluffy-pancakes.jpg"
+image: "/images/fluffy-pancakes.jpg"
 prepTime: "10 minutes"
 cookTime: "15 minutes"
 servings: 6

@@ -2,7 +2,7 @@
 title: "Beef Stir Fry"
 description: "Quick and flavorful beef stir fry with crisp vegetables in a savory sauce. Perfect for busy weeknight dinners."
 category: "Dinner"
-image: "/public/images/beef-stir-fry.jpg"
+image: "/images/beef-stir-fry.jpg"
 prepTime: "15 minutes"
 cookTime: "10 minutes"
 servings: 4

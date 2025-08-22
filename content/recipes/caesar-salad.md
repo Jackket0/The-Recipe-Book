@@ -2,7 +2,7 @@
 title: "Classic Caesar Salad"
 description: "Crisp romaine lettuce with homemade Caesar dressing, parmesan cheese, and crunchy croutons. A timeless favorite that's perfect as a side or light meal."
 category: "Lunch"
-image: "/public/images/caesar-salad.jpg"
+image: "/images/caesar-salad.jpg"
 prepTime: "20 minutes"
 cookTime: "0 minutes"
 servings: 4
