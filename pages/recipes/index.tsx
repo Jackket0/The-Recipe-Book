@@ -1,5 +1,5 @@
 import { GetStaticProps } from 'next';
-import { useState } from 'react';
+import { useState, ChangeEvent } from 'react';
 import Layout from '@/components/Layout';
 import RecipeCard from '@/components/RecipeCard';
 import { Recipe } from '@/types/recipe';
@@ -10,9 +10,17 @@ interface RecipesProps {
   categories: string[];
 }
 
-export default function Recipes({ recipes, categories }: RecipesProps) {
+export default function Recipes({ recipes, categories }: RecipesProps): JSX.Element {
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [searchTerm, setSearchTerm] = useState<string>('');
+
+  const handleSearchChange = (e: ChangeEvent<HTMLInputElement>): void => {
+    setSearchTerm(e.target.value);
+  };
+
+  const handleCategoryChange = (category: string): void => {
+    setSelectedCategory(category);
+  };
 
   const filteredRecipes = recipes.filter((recipe) => {
     const matchesCategory =
@@ -51,7 +59,7 @@ export default function Recipes({ recipes, categories }: RecipesProps) {
               type="text"
               placeholder="Search recipes..."
               value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
+              onChange={handleSearchChange}
               className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
             />
             <svg
@@ -72,7 +80,7 @@ export default function Recipes({ recipes, categories }: RecipesProps) {
           {/* Category Filter */}
           <div className="flex flex-wrap gap-2">
             <button
-              onClick={() => setSelectedCategory('all')}
+              onClick={() => handleCategoryChange('all')}
               className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
                 selectedCategory === 'all'
                   ? 'bg-primary-600 text-white'
@@ -88,7 +96,7 @@ export default function Recipes({ recipes, categories }: RecipesProps) {
               return (
                 <button
                   key={category}
-                  onClick={() => setSelectedCategory(category)}
+                  onClick={() => handleCategoryChange(category)}
                   className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
                     selectedCategory === category
                       ? 'bg-primary-600 text-white'
@@ -141,7 +149,7 @@ export default function Recipes({ recipes, categories }: RecipesProps) {
   );
 }
 
-export const getStaticProps: GetStaticProps = async () => {
+export const getStaticProps: GetStaticProps<RecipesProps> = async () => {
   const recipes = await getAllRecipes();
   const categories = await getCategories();
 

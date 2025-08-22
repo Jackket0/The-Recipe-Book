@@ -1,3 +1,6 @@
+// Utility types
+export type RecipeDifficulty = 'Easy' | 'Medium' | 'Hard';
+
 export interface Recipe {
   slug: string;
   title: string;
@@ -7,7 +10,7 @@ export interface Recipe {
   prepTime: string | null;
   cookTime: string | null;
   servings: number | null;
-  difficulty: 'Easy' | 'Medium' | 'Hard' | null;
+  difficulty: RecipeDifficulty | null;
   ingredients: string[];
   instructions: string[];
   tags: string[] | null;
@@ -24,10 +27,24 @@ export interface RecipeFrontMatter {
   prepTime?: string;
   cookTime?: string;
   servings?: number;
-  difficulty?: 'Easy' | 'Medium' | 'Hard';
+  difficulty?: RecipeDifficulty;
   ingredients: string[];
   instructions: string[];
   tags?: string[];
   dateCreated?: string;
   dateModified?: string;
+}
+
+export interface RecipeMetadata {
+  prepTime: string | null;
+  cookTime: string | null;
+  servings: number | null;
+  difficulty: RecipeDifficulty | null;
+}
+
+export interface RecipeFilter {
+  category?: string;
+  difficulty?: RecipeDifficulty;
+  tags?: string[];
+  searchTerm?: string;
 }

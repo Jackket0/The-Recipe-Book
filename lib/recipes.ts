@@ -74,19 +74,17 @@ export async function getAllRecipes(): Promise<Recipe[]> {
     });
 }
 
-export function getRecipesByCategory(category: string): Promise<Recipe[]> {
-  return getAllRecipes().then((recipes) =>
-    recipes.filter((recipe) => 
-      recipe.category.toLowerCase() === category.toLowerCase()
-    )
+export async function getRecipesByCategory(category: string): Promise<Recipe[]> {
+  const recipes = await getAllRecipes();
+  return recipes.filter((recipe) => 
+    recipe.category.toLowerCase() === category.toLowerCase()
   );
 }
 
-export function getCategories(): Promise<string[]> {
-  return getAllRecipes().then((recipes) => {
-    const categories = Array.from(
-      new Set(recipes.map((recipe) => recipe.category))
-    );
-    return categories.sort();
-  });
+export async function getCategories(): Promise<string[]> {
+  const recipes = await getAllRecipes();
+  const categories = Array.from(
+    new Set(recipes.map((recipe) => recipe.category))
+  );
+  return categories.sort();
 }

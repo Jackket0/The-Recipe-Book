@@ -2,10 +2,15 @@ import React from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 
+interface NavItem {
+  href: string;
+  label: string;
+}
+
 const Header: React.FC = () => {
   const router = useRouter();
 
-  const navItems = [
+  const navItems: NavItem[] = [
     { href: '/', label: 'Home' },
     { href: '/recipes', label: 'Recipes' },
     { href: '/about', label: 'About' },

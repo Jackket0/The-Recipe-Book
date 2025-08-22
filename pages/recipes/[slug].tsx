@@ -9,7 +9,7 @@ interface RecipePageProps {
   recipe: Recipe;
 }
 
-export default function RecipePage({ recipe }: RecipePageProps) {
+export default function RecipePage({ recipe }: RecipePageProps): JSX.Element {
   return (
     <Layout
       title={`${recipe.title} - The Recipe Book`}
@@ -200,7 +200,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
   };
 };
 
-export const getStaticProps: GetStaticProps = async ({ params }) => {
+export const getStaticProps: GetStaticProps<RecipePageProps> = async ({ params }) => {
   const slug = params?.slug as string;
   const recipe = await getRecipeBySlug(slug);
 

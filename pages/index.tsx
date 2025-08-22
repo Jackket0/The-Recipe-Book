@@ -1,4 +1,5 @@
 import { GetStaticProps } from 'next';
+import Link from 'next/link';
 import Layout from '@/components/Layout';
 import RecipeCard from '@/components/RecipeCard';
 import { Recipe } from '@/types/recipe';
@@ -8,7 +9,7 @@ interface HomeProps {
   recipes: Recipe[];
 }
 
-export default function Home({ recipes }: HomeProps) {
+export default function Home({ recipes }: HomeProps): JSX.Element {
   const featuredRecipes = recipes.slice(0, 6);
 
   return (
@@ -28,18 +29,18 @@ export default function Home({ recipes }: HomeProps) {
             dinners to special occasion treats, find your next favorite dish here.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <a
+            <Link
               href="/recipes"
               className="bg-primary-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-primary-700 transition-colors"
             >
               Browse All Recipes
-            </a>
-            <a
+            </Link>
+            <Link
               href="/about"
               className="border border-primary-600 text-primary-600 px-8 py-3 rounded-lg font-semibold hover:bg-primary-50 transition-colors"
             >
               Learn More
-            </a>
+            </Link>
           </div>
         </div>
       </section>
@@ -96,12 +97,12 @@ export default function Home({ recipes }: HomeProps) {
 
           {recipes.length > 6 && (
             <div className="text-center mt-12">
-              <a
+              <Link
                 href="/recipes"
                 className="bg-primary-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-primary-700 transition-colors inline-block"
               >
                 View All Recipes ({recipes.length})
-              </a>
+              </Link>
             </div>
           )}
         </div>
@@ -110,7 +111,7 @@ export default function Home({ recipes }: HomeProps) {
   );
 }
 
-export const getStaticProps: GetStaticProps = async () => {
+export const getStaticProps: GetStaticProps<HomeProps> = async () => {
   const recipes = await getAllRecipes();
 
   return {

@@ -1,6 +1,7 @@
+import Link from 'next/link';
 import Layout from '@/components/Layout';
 
-export default function About() {
+export default function About(): JSX.Element {
   return (
     <Layout
       title="About - The Recipe Book"
@@ -133,12 +134,12 @@ export default function About() {
             <p className="text-gray-600 mb-6">
               Browse our collection of recipes and find your next favorite dish.
             </p>
-            <a
+            <Link
               href="/recipes"
               className="bg-primary-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-primary-700 transition-colors inline-block"
             >
               Explore All Recipes
-            </a>
+            </Link>
           </div>
         </div>
       </div>
