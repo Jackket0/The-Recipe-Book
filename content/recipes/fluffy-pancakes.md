@@ -1,7 +1,7 @@
 ---
 title: "Fluffy Pancakes"
 description: "Light, airy, and incredibly fluffy pancakes that are perfect for weekend breakfast or brunch. Easy to make with pantry staples."
-category: "Breakfast"
+category: "Breakfast & Brunch"
 image: "/images/fluffy-pancakes.jpg"
 prepTime: "10 minutes"
 cookTime: "15 minutes"
@@ -32,11 +32,9 @@ instructions:
   - "Keep warm in a 200°F oven while cooking remaining pancakes."
   - "Serve hot with maple syrup, fresh berries, and a dusting of powdered sugar if desired."
 tags:
-  - "pancakes"
-  - "breakfast"
-  - "brunch"
-  - "fluffy"
-  - "comfort food"
+  - "Comfort Food"
+  - "American"
+  - "Kids Friendly"
 dateCreated: "2024-01-22"
 ---
 

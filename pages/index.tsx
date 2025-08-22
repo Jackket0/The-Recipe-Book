@@ -10,7 +10,7 @@ interface HomeProps {
   recipes: Recipe[];
 }
 
-export default function Home({ recipes }: HomeProps): JSX.Element {
+export default function Home({ recipes = [] }: HomeProps): JSX.Element {
   const featuredRecipes: Recipe[] = recipes.slice(0, 6);
 
   return (
@@ -49,7 +49,7 @@ export default function Home({ recipes }: HomeProps): JSX.Element {
 
           {recipes.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {featuredRecipes.map((recipe) => (
+              {featuredRecipes.filter(recipe => recipe && recipe.slug).map((recipe) => (
                 <RecipeCard key={recipe.slug} recipe={recipe} />
               ))}
             </div>
@@ -100,12 +100,22 @@ export default function Home({ recipes }: HomeProps): JSX.Element {
 }
 
 export const getStaticProps: GetStaticProps<HomeProps> = async () => {
-  const recipes = await getAllRecipes();
+  try {
+    const recipes = await getAllRecipes();
 
-  return {
-    props: {
-      recipes,
-    },
-    revalidate: 60, // Revalidate every minute
-  };
+    return {
+      props: {
+        recipes,
+      },
+      revalidate: 60, // Revalidate every minute
+    };
+  } catch (error) {
+    console.error('Error in getStaticProps:', error);
+    return {
+      props: {
+        recipes: [],
+      },
+      revalidate: 60,
+    };
+  }
 };

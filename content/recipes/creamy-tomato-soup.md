@@ -1,7 +1,7 @@
 ---
 title: "Creamy Tomato Soup"
 description: "Rich, velvety tomato soup made from scratch with fresh herbs and a touch of cream. Perfect comfort food for chilly days."
-category: "Soup"
+category: "Sides"
 image: "/images/creamy-tomato-soup.jpg"
 prepTime: "15 minutes"
 cookTime: "30 minutes"
@@ -37,11 +37,9 @@ instructions:
   - "Serve hot, garnished with fresh basil."
   - "Pair with grilled cheese sandwiches or crusty bread."
 tags:
-  - "soup"
-  - "tomato"
-  - "comfort food"
-  - "vegetarian"
-  - "creamy"
+  - "Comfort Food"
+  - "Vegetarian"
+  - "Italian"
 dateCreated: "2024-01-30"
 ---
 

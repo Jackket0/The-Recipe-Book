@@ -3,11 +3,18 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { Recipe } from '@/types/recipe';
 
+interface DropdownItem {
+  href: string;
+  label: string;
+  isHeader?: boolean;
+  isSeparator?: boolean;
+}
+
 interface NavItem {
   href: string;
   label: string;
   hasDropdown?: boolean;
-  dropdownItems?: { href: string; label: string; isHeader?: boolean; isSeparator?: boolean }[];
+  dropdownItems?: DropdownItem[];
 }
 
 const Header: React.FC = () => {
@@ -28,32 +35,14 @@ const Header: React.FC = () => {
     setIsClient(true);
   }, []);
 
-  // Load all recipes on component mount (only on client)
+  // Temporarily disable client-side recipe loading to fix runtime error
   useEffect(() => {
     if (!isClient) return;
     
-    const loadRecipes = async () => {
-      setIsLoadingRecipes(true);
-      try {
-        // Fetch recipes from the API endpoint
-        const response = await fetch('/api/recipes');
-        if (response.ok) {
-          const recipes = await response.json();
-          setAllRecipes(recipes);
-        } else {
-          console.error('Failed to load recipes:', response.status);
-        }
-      } catch (error) {
-        console.error('Error loading recipes:', error);
-        // Fallback: try to get recipes from window.__NEXT_DATA__ if available
-        if (typeof window !== 'undefined' && (window as any).__NEXT_DATA__?.props?.recipes) {
-          setAllRecipes((window as any).__NEXT_DATA__.props.recipes);
-        }
-      } finally {
-        setIsLoadingRecipes(false);
-      }
-    };
-    loadRecipes();
+    // Try to get recipes from window.__NEXT_DATA__ if available
+    if (typeof window !== 'undefined' && (window as any).__NEXT_DATA__?.props?.recipes) {
+      setAllRecipes((window as any).__NEXT_DATA__.props.recipes);
+    }
   }, [isClient]);
 
   // Search functionality (only on client)
@@ -68,8 +57,10 @@ const Header: React.FC = () => {
 
     const term = searchTerm.toLowerCase().trim();
     const filtered = allRecipes.filter((recipe: Recipe): boolean => {
+      if (!recipe) return false;
+      
       // Search in title
-      if (recipe.title.toLowerCase().includes(term)) {
+      if (recipe.title?.toLowerCase().includes(term)) {
         return true;
       }
       
@@ -79,17 +70,17 @@ const Header: React.FC = () => {
       }
       
       // Search in category
-      if (recipe.category.toLowerCase().includes(term)) {
+      if (recipe.category?.toLowerCase().includes(term)) {
         return true;
       }
       
       // Search in tags
-      if (recipe.tags?.some((tag: string): boolean => tag.toLowerCase().includes(term))) {
+      if (recipe.tags?.some((tag: string): boolean => tag?.toLowerCase().includes(term))) {
         return true;
       }
       
       // Search in ingredients
-      if (recipe.ingredients.some((ingredient: string): boolean => ingredient.toLowerCase().includes(term))) {
+      if (recipe.ingredients?.some((ingredient: string): boolean => ingredient?.toLowerCase().includes(term))) {
         return true;
       }
       
@@ -162,7 +153,7 @@ const Header: React.FC = () => {
     };
   }, []);
 
-  const categories = [
+  const categories: DropdownItem[] = [
     // Actual recipe categories based on content
     { href: '/recipes/category/breakfast', label: 'Breakfast', isHeader: true },
     { href: '/recipes/category/lunch', label: 'Lunch' },

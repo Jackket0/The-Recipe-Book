@@ -1,7 +1,7 @@
 ---
 title: "Classic Chocolate Chip Cookies"
 description: "Soft, chewy, and loaded with chocolate chips - these are the ultimate comfort cookies that everyone will love."
-category: "Desserts"
+category: "Baking"
 image: "/images/classic-chocolate-chip-cookies.jpg"
 prepTime: "15 minutes"
 cookTime: "10-12 minutes"
@@ -29,10 +29,8 @@ instructions:
   - "Cool on baking sheet for 5 minutes before transferring to a wire rack."
   - "Store in an airtight container for up to one week."
 tags:
-  - "cookies"
-  - "chocolate"
-  - "baking"
-  - "comfort food"
+  - "Comfort Food"
+  - "American"
 dateCreated: "2024-01-15"
 ---
 

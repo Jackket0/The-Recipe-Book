@@ -15,7 +15,7 @@ export default function Drinks({ recipes }: DrinksProps): JSX.Element {
   const router = useRouter();
   
   // Filter recipes to show only drinks (using the new drink categories)
-  const drinkCategories: MainCategory[] = ['Mocktails'];
+  const drinkCategories: MainCategory[] = ['Mocktails', 'Cocktails', 'Smoothies & Juices', 'Shakes'];
   const drinkRecipes = recipes.filter(recipe => drinkCategories.includes(recipe.category));
 
   const handleCategoryClick = (slug: string) => {

@@ -1,7 +1,7 @@
 ---
 title: "Mediterranean Quinoa Salad"
 description: "A fresh, healthy, and colorful salad packed with quinoa, vegetables, herbs, and a zesty lemon dressing. Perfect for meal prep!"
-category: "Salads"
+category: "Sides"
 image: "/images/mediterranean-quinoa-salad.jpg"
 prepTime: "20 minutes"
 cookTime: "15 minutes"
@@ -35,11 +35,10 @@ instructions:
   - "Chill for at least 30 minutes before serving to allow flavors to meld."
   - "Serve chilled or at room temperature."
 tags:
-  - "healthy"
-  - "vegetarian"
-  - "mediterranean"
-  - "meal prep"
-  - "quinoa"
+  - "Vegetarian"
+  - "Mediterranean"
+  - "Meal Prep"
+  - "Low Calorie"
 dateCreated: "2024-01-10"
 ---
 

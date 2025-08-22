@@ -6,7 +6,7 @@ import html from 'remark-html';
 import { Recipe, RecipeFrontMatter, MainCategory, RecipeTag } from '@/types/recipe';
 import { MAIN_CATEGORIES, getAllTags, getTagInfo } from './categories';
 
-const recipesDirectory = path.join(process.cwd(), 'content/recipes');
+const recipesDirectory: string = path.join(process.cwd(), 'content/recipes');
 
 export function getRecipeSlugs(): string[] {
   if (!fs.existsSync(recipesDirectory)) {
@@ -20,20 +20,20 @@ export function getRecipeSlugs(): string[] {
 
 export async function getRecipeBySlug(slug: string): Promise<Recipe | null> {
   try {
-    const fullPath = path.join(recipesDirectory, `${slug}.md`);
+    const fullPath: string = path.join(recipesDirectory, `${slug}.md`);
     
     if (!fs.existsSync(fullPath)) {
       return null;
     }
     
-    const fileContents = fs.readFileSync(fullPath, 'utf8');
+    const fileContents: string = fs.readFileSync(fullPath, 'utf8');
     const { data, content } = matter(fileContents);
     
-    // Process markdown content
+    // Process markdown content to HTML
     const processedContent = await remark().use(html).process(content);
-    const contentHtml = processedContent.toString();
+    const contentHtml: string = processedContent.toString();
     
-    const frontMatter = data as RecipeFrontMatter;
+    const frontMatter: RecipeFrontMatter = data as RecipeFrontMatter;
     
     // Validate category
     if (!frontMatter.category || !(frontMatter.category in MAIN_CATEGORIES)) {
@@ -43,10 +43,10 @@ export async function getRecipeBySlug(slug: string): Promise<Recipe | null> {
     
     // Validate and filter tags
     const validTags: RecipeTag[] = [];
-    const allValidTags = getAllTags();
+    const allValidTags: RecipeTag[] = getAllTags();
     
     if (frontMatter.tags) {
-      frontMatter.tags.forEach(tag => {
+      frontMatter.tags.forEach((tag: string): void => {
         if (allValidTags.includes(tag as RecipeTag)) {
           validTags.push(tag as RecipeTag);
         } else {
@@ -79,40 +79,45 @@ export async function getRecipeBySlug(slug: string): Promise<Recipe | null> {
 }
 
 export async function getAllRecipes(): Promise<Recipe[]> {
-  const slugs: string[] = getRecipeSlugs();
-  const recipes: (Recipe | null)[] = await Promise.all(
-    slugs.map((slug: string) => getRecipeBySlug(slug))
-  );
-  
-  // Filter out null values and sort by date created (newest first)
-  return recipes
-    .filter((recipe): recipe is Recipe => recipe !== null)
-    .sort((a, b) => {
-      if (a.dateCreated && b.dateCreated) {
-        return new Date(b.dateCreated).getTime() - new Date(a.dateCreated).getTime();
-      }
-      return a.title.localeCompare(b.title);
-    });
+  try {
+    const slugs: string[] = getRecipeSlugs();
+    const recipes: (Recipe | null)[] = await Promise.all(
+      slugs.map((slug: string) => getRecipeBySlug(slug))
+    );
+    
+    // Filter out null values and sort by date created (newest first)
+    return recipes
+      .filter((recipe): recipe is Recipe => recipe !== null)
+      .sort((a: Recipe, b: Recipe): number => {
+        if (a.dateCreated && b.dateCreated) {
+          return new Date(b.dateCreated).getTime() - new Date(a.dateCreated).getTime();
+        }
+        return a.title.localeCompare(b.title);
+      });
+  } catch (error) {
+    console.error('Error in getAllRecipes:', error);
+    return [];
+  }
 }
 
 export async function getRecipesByCategory(category: MainCategory): Promise<Recipe[]> {
-  const recipes = await getAllRecipes();
+  const recipes: Recipe[] = await getAllRecipes();
   return recipes.filter((recipe: Recipe): boolean => 
     recipe.category === category
   );
 }
 
 export async function getRecipesByTag(tag: RecipeTag): Promise<Recipe[]> {
-  const recipes = await getAllRecipes();
+  const recipes: Recipe[] = await getAllRecipes();
   return recipes.filter((recipe: Recipe): boolean => 
     recipe.tags.includes(tag)
   );
 }
 
 export async function getRecipesByTags(tags: RecipeTag[]): Promise<Recipe[]> {
-  const recipes = await getAllRecipes();
+  const recipes: Recipe[] = await getAllRecipes();
   return recipes.filter((recipe: Recipe): boolean => 
-    tags.some(tag => recipe.tags.includes(tag))
+    tags.some((tag: RecipeTag): boolean => recipe.tags.includes(tag))
   );
 }
 
@@ -128,8 +133,8 @@ export async function getTags(): Promise<RecipeTag[]> {
   const recipes: Recipe[] = await getAllRecipes();
   const allTags: RecipeTag[] = [];
   
-  recipes.forEach(recipe => {
-    recipe.tags.forEach(tag => {
+  recipes.forEach((recipe: Recipe): void => {
+    recipe.tags.forEach((tag: RecipeTag): void => {
       if (!allTags.includes(tag)) {
         allTags.push(tag);
       }
@@ -143,15 +148,15 @@ export async function getTagsWithCount(): Promise<{ tag: RecipeTag; count: numbe
   const recipes: Recipe[] = await getAllRecipes();
   const tagCounts: Map<RecipeTag, number> = new Map();
   
-  recipes.forEach(recipe => {
-    recipe.tags.forEach(tag => {
+  recipes.forEach((recipe: Recipe): void => {
+    recipe.tags.forEach((tag: RecipeTag): void => {
       tagCounts.set(tag, (tagCounts.get(tag) || 0) + 1);
     });
   });
   
   return Array.from(tagCounts.entries())
-    .map(([tag, count]) => ({ tag, count }))
-    .sort((a, b) => b.count - a.count);
+    .map(([tag, count]: [RecipeTag, number]) => ({ tag, count }))
+    .sort((a: { tag: RecipeTag; count: number }, b: { tag: RecipeTag; count: number }): number => b.count - a.count);
 }
 
 // Search recipes by multiple criteria
@@ -161,9 +166,9 @@ export async function searchRecipes(filters: {
   difficulty?: string;
   searchTerm?: string;
 }): Promise<Recipe[]> {
-  const recipes = await getAllRecipes();
+  const recipes: Recipe[] = await getAllRecipes();
   
-  return recipes.filter(recipe => {
+  return recipes.filter((recipe: Recipe): boolean => {
     // Filter by category
     if (filters.category && recipe.category !== filters.category) {
       return false;
@@ -171,7 +176,7 @@ export async function searchRecipes(filters: {
     
     // Filter by tags (any of the specified tags)
     if (filters.tags && filters.tags.length > 0) {
-      const hasMatchingTag = filters.tags.some(tag => recipe.tags.includes(tag));
+      const hasMatchingTag: boolean = filters.tags.some((tag: RecipeTag): boolean => recipe.tags.includes(tag));
       if (!hasMatchingTag) {
         return false;
       }
@@ -184,10 +189,10 @@ export async function searchRecipes(filters: {
     
     // Filter by search term
     if (filters.searchTerm) {
-      const searchLower = filters.searchTerm.toLowerCase();
-      const matchesTitle = recipe.title.toLowerCase().includes(searchLower);
-      const matchesDescription = recipe.description?.toLowerCase().includes(searchLower) || false;
-      const matchesIngredients = recipe.ingredients.some(ingredient => 
+      const searchLower: string = filters.searchTerm.toLowerCase();
+      const matchesTitle: boolean = recipe.title.toLowerCase().includes(searchLower);
+      const matchesDescription: boolean = recipe.description?.toLowerCase().includes(searchLower) || false;
+      const matchesIngredients: boolean = recipe.ingredients.some((ingredient: string): boolean => 
         ingredient.toLowerCase().includes(searchLower)
       );
       

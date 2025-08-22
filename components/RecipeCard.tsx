@@ -11,8 +11,15 @@ const RecipeCard: React.FC<RecipeCardProps> = ({ recipe }) => {
   const router = useRouter();
 
   const handleClick = () => {
-    router.push(`/recipes/${recipe.slug}`);
+    if (recipe?.slug) {
+      router.push(`/recipes/${recipe.slug}`);
+    }
   };
+
+  // Return null if recipe is not provided
+  if (!recipe) {
+    return null;
+  }
 
   return (
     <div 

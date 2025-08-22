@@ -1,5 +1,8 @@
 import { MainCategory, DietaryTag, CuisineTag, OccasionTag, RecipeTag } from '@/types/recipe';
 
+// Re-export types for convenience
+export type { MainCategory, DietaryTag, CuisineTag, OccasionTag, RecipeTag };
+
 // Category definitions with descriptions and icons
 export interface CategoryInfo {
   name: string;
@@ -239,7 +242,7 @@ export const OCCASION_TAGS: Record<OccasionTag, CategoryInfo> = {
 // Helper functions
 export function getCategoryInfo(categoryType: 'main' | 'dietary' | 'cuisine' | 'occasion', categoryName: string): CategoryInfo | null {
   // Convert slug back to proper name format
-  const properName = categoryName.split('-').map(word => 
+  const properName: string = categoryName.split('-').map((word: string): string => 
     word.charAt(0).toUpperCase() + word.slice(1)
   ).join(' ');
   
@@ -272,14 +275,14 @@ export function getAllCategories(): {
 }
 
 export function getCategoryBySlug(slug: string): CategoryInfo | null {
-  const allCategories = [
+  const allCategories: CategoryInfo[] = [
     ...Object.values(MAIN_CATEGORIES),
     ...Object.values(DIETARY_TAGS),
     ...Object.values(CUISINE_TAGS),
     ...Object.values(OCCASION_TAGS)
   ];
   
-  return allCategories.find(cat => cat.slug === slug) || null;
+  return allCategories.find((cat: CategoryInfo): boolean => cat.slug === slug) || null;
 }
 
 // Get all available tags

@@ -35,11 +35,9 @@ instructions:
   - "Remove from heat and garnish with green onions and sesame seeds."
   - "Serve immediately over steamed rice."
 tags:
-  - "beef"
-  - "stir-fry"
-  - "asian"
-  - "quick"
-  - "weeknight"
+  - "Chinese"
+  - "Quick Meals"
+  - "High Protein"
 dateCreated: "2024-01-20"
 ---
 

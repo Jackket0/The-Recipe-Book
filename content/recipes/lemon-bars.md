@@ -33,11 +33,8 @@ instructions:
   - "Dust with powdered sugar before cutting into squares."
   - "Store covered in the refrigerator for up to 5 days."
 tags:
-  - "lemon"
-  - "bars"
-  - "dessert"
-  - "citrus"
-  - "sweet"
+  - "American"
+  - "Comfort Food"
 dateCreated: "2024-01-28"
 ---
 
