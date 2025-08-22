@@ -13,8 +13,8 @@ export function getRecipeSlugs(): string[] {
   }
   
   return fs.readdirSync(recipesDirectory)
-    .filter((name) => name.endsWith('.md'))
-    .map((name) => name.replace(/\.md$/, ''));
+    .filter((name: string): boolean => name.endsWith('.md'))
+    .map((name: string): string => name.replace(/\.md$/, ''));
 }
 
 export async function getRecipeBySlug(slug: string): Promise<Recipe | null> {
@@ -58,9 +58,9 @@ export async function getRecipeBySlug(slug: string): Promise<Recipe | null> {
 }
 
 export async function getAllRecipes(): Promise<Recipe[]> {
-  const slugs = getRecipeSlugs();
-  const recipes = await Promise.all(
-    slugs.map((slug) => getRecipeBySlug(slug))
+  const slugs: string[] = getRecipeSlugs();
+  const recipes: (Recipe | null)[] = await Promise.all(
+    slugs.map((slug: string) => getRecipeBySlug(slug))
   );
   
   // Filter out null values and sort by date created (newest first)
@@ -76,15 +76,15 @@ export async function getAllRecipes(): Promise<Recipe[]> {
 
 export async function getRecipesByCategory(category: string): Promise<Recipe[]> {
   const recipes = await getAllRecipes();
-  return recipes.filter((recipe) => 
+  return recipes.filter((recipe: Recipe): boolean => 
     recipe.category.toLowerCase() === category.toLowerCase()
   );
 }
 
 export async function getCategories(): Promise<string[]> {
-  const recipes = await getAllRecipes();
-  const categories = Array.from(
-    new Set(recipes.map((recipe) => recipe.category))
+  const recipes: Recipe[] = await getAllRecipes();
+  const categories: string[] = Array.from(
+    new Set(recipes.map((recipe: Recipe): string => recipe.category))
   );
   return categories.sort();
 }

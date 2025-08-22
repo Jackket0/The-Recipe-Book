@@ -2,7 +2,7 @@
 title: "Mediterranean Quinoa Salad"
 description: "A fresh, healthy, and colorful salad packed with quinoa, vegetables, herbs, and a zesty lemon dressing. Perfect for meal prep!"
 category: "Salads"
-image: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=800&h=600&fit=crop"
+image: "/images/mediterranean-quinoa-salad.jpg"
 prepTime: "20 minutes"
 cookTime: "15 minutes"
 servings: 6

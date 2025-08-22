@@ -61,7 +61,7 @@ const RecipeCard: React.FC<RecipeCardProps> = ({ recipe }) => {
             <Link 
               href={`/recipes/category/${recipe.category.toLowerCase().replace(/\s+/g, '-')}`}
               className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary-100 text-primary-800 hover:bg-primary-200 transition-colors"
-              onClick={(e) => e.stopPropagation()}
+              onClick={(e: React.MouseEvent<HTMLAnchorElement>): void => e.stopPropagation()}
             >
               {recipe.category}
             </Link>

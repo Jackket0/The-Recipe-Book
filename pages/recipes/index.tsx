@@ -1,5 +1,6 @@
 import { GetStaticProps } from 'next';
-import { useState, ChangeEvent } from 'react';
+import { useState, ChangeEvent, useEffect } from 'react';
+import { useRouter } from 'next/router';
 import Layout from '@/components/Layout';
 import RecipeCard from '@/components/RecipeCard';
 import { Recipe } from '@/types/recipe';
@@ -11,8 +12,16 @@ interface RecipesProps {
 }
 
 export default function Recipes({ recipes, categories }: RecipesProps): JSX.Element {
+  const router = useRouter();
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [searchTerm, setSearchTerm] = useState<string>('');
+
+  // Initialize search term from URL query parameter
+  useEffect(() => {
+    if (router.isReady && router.query.search) {
+      setSearchTerm(router.query.search as string);
+    }
+  }, [router.isReady, router.query.search]);
 
   const handleSearchChange = (e: ChangeEvent<HTMLInputElement>): void => {
     setSearchTerm(e.target.value);
@@ -22,17 +31,21 @@ export default function Recipes({ recipes, categories }: RecipesProps): JSX.Elem
     setSelectedCategory(category);
   };
 
-  const filteredRecipes = recipes.filter((recipe) => {
+  const filteredRecipes: Recipe[] = recipes.filter((recipe: Recipe): boolean => {
     const matchesCategory =
       selectedCategory === 'all' ||
       recipe.category.toLowerCase() === selectedCategory.toLowerCase();
-    const matchesSearch =
+    const matchesSearch: boolean =
       searchTerm === '' ||
       recipe.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      recipe.description?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      recipe.tags?.some((tag) =>
+      (recipe.description?.toLowerCase().includes(searchTerm.toLowerCase()) ?? false) ||
+      recipe.category.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      recipe.ingredients.some((ingredient: string): boolean =>
+        ingredient.toLowerCase().includes(searchTerm.toLowerCase())
+      ) ||
+      (recipe.tags?.some((tag: string): boolean =>
         tag.toLowerCase().includes(searchTerm.toLowerCase())
-      );
+      ) ?? false);
 
     return matchesCategory && matchesSearch;
   });
@@ -92,8 +105,8 @@ export default function Recipes({ recipes, categories }: RecipesProps): JSX.Elem
               All ({recipes.length})
             </button>
             {categories.map((category) => {
-              const count = recipes.filter(
-                (r) => r.category.toLowerCase() === category.toLowerCase()
+              const count: number = recipes.filter(
+                (r: Recipe): boolean => r.category.toLowerCase() === category.toLowerCase()
               ).length;
               return (
                 <button

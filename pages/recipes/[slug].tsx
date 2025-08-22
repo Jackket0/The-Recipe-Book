@@ -159,10 +159,22 @@ export default function RecipePage({ recipe }: RecipePageProps): JSX.Element {
               <ol className="space-y-4">
                 {recipe.instructions.map((instruction, index) => (
                   <li key={index} className="flex items-start">
-                    <span className="bg-primary-600 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-medium mr-4 mt-0.5 flex-shrink-0">
-                      {index + 1}
-                    </span>
-                    <p className="text-gray-700 leading-relaxed">{instruction}</p>
+                    <div className="flex items-center mr-4 mt-0.5">
+                      <input
+                        type="checkbox"
+                        id={`instruction-${index}`}
+                        className="w-4 h-4 text-primary-600 bg-white border-gray-300 rounded focus:ring-primary-500 focus:ring-2 mr-3 flex-shrink-0"
+                      />
+                      <span className="bg-primary-600 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-medium flex-shrink-0">
+                        {index + 1}
+                      </span>
+                    </div>
+                    <label 
+                      htmlFor={`instruction-${index}`}
+                      className="text-gray-700 leading-relaxed cursor-pointer select-none"
+                    >
+                      {instruction}
+                    </label>
                   </li>
                 ))}
               </ol>

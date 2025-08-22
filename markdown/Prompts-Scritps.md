@@ -1,5 +1,4 @@
-npm install
-npm run dev
+Please push to Git and Github.
 
 __Type-Check Entire Project__
 Run a type check across the whole project. Fix or recommend fixes for:

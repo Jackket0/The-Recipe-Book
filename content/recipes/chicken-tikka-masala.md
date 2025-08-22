@@ -2,7 +2,7 @@
 title: "Chicken Tikka Masala"
 description: "Tender marinated chicken in a rich, creamy tomato-based sauce with aromatic spices. A restaurant-quality Indian dish you can make at home."
 category: "Main Dishes"
-image: "https://images.unsplash.com/photo-1565557623262-b51c2513a641?w=800&h=600&fit=crop"
+image: "/images/chicken-tikka-masala.jpg"
 prepTime: "30 minutes (plus 2 hours marinating)"
 cookTime: "25 minutes"
 servings: 4

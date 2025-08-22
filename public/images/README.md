@@ -13,12 +13,16 @@ This directory contains images for the recipe cards and detail pages.
 - **Format**: JPG or WebP for photos, PNG for graphics with transparency
 - **File size**: Keep under 500KB for optimal loading
 
-### Current Image Files Needed
+### Current Image Files
+- `banana-bread.jpg`
+- `beef-stir-fry.jpg`
 - `caesar-salad.jpg`
-- `beef-stir-fry.jpg` 
+- `chicken-tikka-masala.jpg`
+- `classic-chocolate-chip-cookies.jpg`
 - `creamy-tomato-soup.jpg`
 - `fluffy-pancakes.jpg`
 - `lemon-bars.jpg`
+- `mediterranean-quinoa-salad.jpg`
 
 ## Adding New Images
 

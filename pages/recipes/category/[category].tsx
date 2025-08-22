@@ -19,18 +19,18 @@ export default function CategoryPage({ recipes, category, allCategories }: Categ
     setSearchTerm(e.target.value);
   };
 
-  const filteredRecipes = recipes.filter((recipe) => {
+  const filteredRecipes: Recipe[] = recipes.filter((recipe: Recipe): boolean => {
     return (
       searchTerm === '' ||
       recipe.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      recipe.description?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      recipe.tags?.some((tag) =>
+      (recipe.description?.toLowerCase().includes(searchTerm.toLowerCase()) ?? false) ||
+      (recipe.tags?.some((tag: string): boolean =>
         tag.toLowerCase().includes(searchTerm.toLowerCase())
-      )
+      ) ?? false)
     );
   });
 
-  const categoryDisplayName = category.charAt(0).toUpperCase() + category.slice(1);
+  const categoryDisplayName: string = category.charAt(0).toUpperCase() + category.slice(1);
 
   return (
     <Layout
@@ -215,7 +215,7 @@ export const getStaticProps: GetStaticProps<CategoryPageProps> = async ({ params
   const allCategories = await getCategories();
   
   // Find recipes matching this category (case insensitive)
-  const recipes = allRecipes.filter((recipe) => 
+  const recipes: Recipe[] = allRecipes.filter((recipe: Recipe): boolean => 
     recipe.category.toLowerCase() === categoryName.toLowerCase()
   );
 
@@ -227,7 +227,7 @@ export const getStaticProps: GetStaticProps<CategoryPageProps> = async ({ params
   }
 
   // Find the actual category name with proper casing
-  const actualCategory = allCategories.find(cat => 
+  const actualCategory: string = allCategories.find((cat: string): boolean => 
     cat.toLowerCase() === categoryName.toLowerCase()
   ) || categoryName;
 

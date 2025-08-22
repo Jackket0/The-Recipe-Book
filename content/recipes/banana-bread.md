@@ -2,7 +2,7 @@
 title: "Moist Banana Bread"
 description: "The ultimate banana bread recipe that's incredibly moist, perfectly sweet, and loaded with banana flavor. Uses overripe bananas for the best taste."
 category: "Baked Goods"
-image: "https://images.unsplash.com/photo-1586444248902-2f64eddc13df?w=800&h=600&fit=crop"
+image: "/images/banana-bread.jpg"
 prepTime: "15 minutes"
 cookTime: "60-65 minutes"
 servings: 10

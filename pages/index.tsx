@@ -2,6 +2,7 @@ import { GetStaticProps } from 'next';
 import Link from 'next/link';
 import Layout from '@/components/Layout';
 import RecipeCard from '@/components/RecipeCard';
+import QuickSearch from '@/components/QuickSearch';
 import { Recipe } from '@/types/recipe';
 import { getAllRecipes } from '@/lib/recipes';
 
@@ -10,7 +11,7 @@ interface HomeProps {
 }
 
 export default function Home({ recipes }: HomeProps): JSX.Element {
-  const featuredRecipes = recipes.slice(0, 6);
+  const featuredRecipes: Recipe[] = recipes.slice(0, 6);
 
   return (
     <Layout
@@ -28,6 +29,12 @@ export default function Home({ recipes }: HomeProps): JSX.Element {
             Discover delicious recipes from around the world. From quick weeknight
             dinners to special occasion treats, find your next favorite dish here.
           </p>
+          
+          {/* Quick Search */}
+          <div className="mb-8">
+            <QuickSearch recipes={recipes} maxResults={6} />
+          </div>
+          
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
               href="/recipes"

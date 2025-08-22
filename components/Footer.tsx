@@ -7,7 +7,7 @@ const Footer: React.FC = () => {
   return (
     <footer className="bg-gray-50 border-t border-gray-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {/* Brand */}
           <div>
             <Link href="/" className="text-xl font-bold text-primary-600 font-serif">
@@ -41,16 +41,6 @@ const Footer: React.FC = () => {
                 </Link>
               </li>
             </ul>
-          </div>
-
-          {/* Contact */}
-          <div>
-            <h3 className="text-sm font-semibold text-gray-900 uppercase tracking-wide">
-              Connect
-            </h3>
-            <p className="mt-4 text-sm text-gray-600">
-              Share your favorite recipes and cooking tips with our community.
-            </p>
           </div>
         </div>
 

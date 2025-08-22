@@ -2,7 +2,7 @@
 title: "Classic Chocolate Chip Cookies"
 description: "Soft, chewy, and loaded with chocolate chips - these are the ultimate comfort cookies that everyone will love."
 category: "Desserts"
-image: "https://images.unsplash.com/photo-1499636136210-6f4ee915583e?w=800&h=600&fit=crop"
+image: "/images/classic-chocolate-chip-cookies.jpg"
 prepTime: "15 minutes"
 cookTime: "10-12 minutes"
 servings: 24
