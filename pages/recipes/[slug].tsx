@@ -37,75 +37,13 @@ export default function RecipePage({ recipe }: RecipePageProps): JSX.Element {
 
         {/* Recipe Header */}
         <header className="mb-8">
-          <div className="flex flex-wrap items-center gap-2 mb-4">
-            <span className="bg-primary-100 text-primary-800 px-3 py-1 rounded-full text-sm font-medium">
-              {recipe.category}
-            </span>
-            {recipe.difficulty && (
-              <span
-                className={`px-3 py-1 rounded-full text-sm font-medium text-white ${
-                  recipe.difficulty === 'Easy'
-                    ? 'bg-green-500'
-                    : recipe.difficulty === 'Medium'
-                    ? 'bg-yellow-500'
-                    : 'bg-red-500'
-                }`}
-              >
-                {recipe.difficulty}
-              </span>
-            )}
-            {recipe.tags?.map((tag) => (
-              <span
-                key={tag}
-                className="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-sm"
-              >
-                #{tag}
-              </span>
-            ))}
-          </div>
-
+          {/* Title at the top */}
           <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
             {recipe.title}
           </h1>
-
-          {recipe.description && (
-            <p className="text-xl text-gray-600 mb-6">{recipe.description}</p>
-          )}
-
-          {/* Recipe Meta */}
-          <div className="flex flex-wrap items-center gap-6 text-sm text-gray-600">
-            {recipe.prepTime && (
-              <div className="flex items-center">
-                <svg className="w-5 h-5 mr-2 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
-                  <path
-                    fillRule="evenodd"
-                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-                <span>Prep: {recipe.prepTime}</span>
-              </div>
-            )}
-            {recipe.cookTime && (
-              <div className="flex items-center">
-                <svg className="w-5 h-5 mr-2 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
-                  <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z" />
-                </svg>
-                <span>Cook: {recipe.cookTime}</span>
-              </div>
-            )}
-            {recipe.servings && (
-              <div className="flex items-center">
-                <svg className="w-5 h-5 mr-2 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
-                  <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3z" />
-                </svg>
-                <span>Serves: {recipe.servings}</span>
-              </div>
-            )}
-          </div>
         </header>
 
-        {/* Recipe Image */}
+        {/* Recipe Image - directly below title */}
         {recipe.image && (
           <div className="relative h-96 w-full mb-8 rounded-lg overflow-hidden">
             <Image
@@ -117,6 +55,70 @@ export default function RecipePage({ recipe }: RecipePageProps): JSX.Element {
           </div>
         )}
 
+        {/* Category Badge and other badges */}
+        <div className="flex flex-wrap items-center gap-2 mb-6">
+          <span className="bg-primary-100 text-primary-800 px-4 py-2 rounded-full text-sm font-medium">
+            {recipe.category}
+          </span>
+          {recipe.difficulty && (
+            <span
+              className={`px-4 py-2 rounded-full text-sm font-medium text-white ${
+                recipe.difficulty === 'Easy'
+                  ? 'bg-green-500'
+                  : recipe.difficulty === 'Medium'
+                  ? 'bg-yellow-500'
+                  : 'bg-red-500'
+              }`}
+            >
+              {recipe.difficulty}
+            </span>
+          )}
+          {recipe.tags?.map((tag) => (
+            <span
+              key={tag}
+              className="bg-gray-100 text-gray-700 px-4 py-2 rounded-full text-sm"
+            >
+              #{tag}
+            </span>
+          ))}
+        </div>
+
+        {recipe.description && (
+          <p className="text-xl text-gray-600 mb-6">{recipe.description}</p>
+        )}
+
+        {/* Recipe Meta */}
+        <div className="flex flex-wrap items-center gap-6 text-sm text-gray-600 mb-8">
+          {recipe.prepTime && (
+            <div className="flex items-center">
+              <svg className="w-5 h-5 mr-2 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                <path
+                  fillRule="evenodd"
+                  d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z"
+                  clipRule="evenodd"
+                />
+              </svg>
+              <span>Prep: {recipe.prepTime}</span>
+            </div>
+          )}
+          {recipe.cookTime && (
+            <div className="flex items-center">
+              <svg className="w-5 h-5 mr-2 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z" />
+              </svg>
+              <span>Cook: {recipe.cookTime}</span>
+            </div>
+          )}
+          {recipe.servings && (
+            <div className="flex items-center">
+              <svg className="w-5 h-5 mr-2 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3z" />
+              </svg>
+              <span>Serves: {recipe.servings}</span>
+            </div>
+          )}
+        </div>
+
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Ingredients */}
           <div className="lg:col-span-1">
@@ -125,11 +127,20 @@ export default function RecipePage({ recipe }: RecipePageProps): JSX.Element {
                 Ingredients
               </h2>
               {recipe.ingredients.length > 0 ? (
-                <ul className="space-y-2">
+                <ul className="space-y-3">
                   {recipe.ingredients.map((ingredient, index) => (
                     <li key={index} className="flex items-start">
-                      <span className="w-2 h-2 bg-primary-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
-                      <span className="text-gray-700">{ingredient}</span>
+                      <input
+                        type="checkbox"
+                        id={`ingredient-${index}`}
+                        className="w-4 h-4 text-primary-600 bg-white border-gray-300 rounded focus:ring-primary-500 focus:ring-2 mt-0.5 mr-3 flex-shrink-0"
+                      />
+                      <label 
+                        htmlFor={`ingredient-${index}`}
+                        className="text-gray-700 cursor-pointer select-none leading-relaxed"
+                      >
+                        {ingredient}
+                      </label>
                     </li>
                   ))}
                 </ul>
