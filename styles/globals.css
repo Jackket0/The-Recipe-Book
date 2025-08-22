@@ -1,0 +1,45 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap');
+
+@layer base {
+  html {
+    font-family: 'Inter', system-ui, sans-serif;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Playfair Display', Georgia, serif;
+  }
+}
+
+@layer components {
+  .recipe-content h1 {
+    @apply text-3xl font-bold mb-4 text-gray-900;
+  }
+  
+  .recipe-content h2 {
+    @apply text-2xl font-semibold mb-3 text-gray-800;
+  }
+  
+  .recipe-content h3 {
+    @apply text-xl font-medium mb-2 text-gray-700;
+  }
+  
+  .recipe-content p {
+    @apply mb-4 text-gray-600 leading-relaxed;
+  }
+  
+  .recipe-content ul, .recipe-content ol {
+    @apply mb-4 pl-6 text-gray-600;
+  }
+  
+  .recipe-content li {
+    @apply mb-2;
+  }
+  
+  .recipe-content strong {
+    @apply font-semibold text-gray-800;
+  }
+}
