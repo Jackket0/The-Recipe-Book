@@ -1,4 +1,4 @@
-import { MainCategory, DietaryCategory, CuisineCategory, DrinkCategory } from '@/types/recipe';
+import { MainCategory, DietaryTag, CuisineTag, OccasionTag, RecipeTag } from '@/types/recipe';
 
 // Category definitions with descriptions and icons
 export interface CategoryInfo {
@@ -8,72 +8,86 @@ export interface CategoryInfo {
   slug: string;
 }
 
-// Main categories
+// Main categories - updated to match requirements
 export const MAIN_CATEGORIES: Record<MainCategory, CategoryInfo> = {
+  // Food categories
   'Mains': {
     name: 'Mains',
-    description: 'Hearty main dishes and entrees',
+    description: 'Meat, fish, vegetarian mains',
     icon: '🍽️',
     slug: 'mains'
   },
   'Sides': {
     name: 'Sides',
-    description: 'Delicious side dishes and accompaniments',
+    description: 'Vegetables, breads, accompaniments',
     icon: '🥗',
     slug: 'sides'
   },
-  'Drinks': {
-    name: 'Drinks',
-    description: 'Refreshing beverages and cocktails',
-    icon: '🥤',
-    slug: 'drinks'
+  'Snacks': {
+    name: 'Snacks',
+    description: 'Finger foods, light bites',
+    icon: '🍿',
+    slug: 'snacks'
   },
-  'Desserts': {
-    name: 'Desserts',
-    description: 'Sweet treats and desserts',
-    icon: '🍰',
-    slug: 'desserts'
-  },
-  'Appetizers': {
-    name: 'Appetizers',
-    description: 'Starters and appetizers',
-    icon: '🍤',
-    slug: 'appetizers'
-  },
-  'Breakfast': {
-    name: 'Breakfast',
-    description: 'Morning meals and breakfast dishes',
+  'Breakfast & Brunch': {
+    name: 'Breakfast & Brunch',
+    description: 'Pancakes, eggs, cereals',
     icon: '🥞',
-    slug: 'breakfast'
+    slug: 'breakfast-brunch'
   },
   'Lunch': {
     name: 'Lunch',
-    description: 'Light meals and lunch options',
+    description: 'Quick meals, salads, sandwiches',
     icon: '🥪',
     slug: 'lunch'
   },
   'Dinner': {
     name: 'Dinner',
-    description: 'Evening meals and dinner recipes',
+    description: 'Heavier meals, multi-course',
     icon: '🍖',
     slug: 'dinner'
+  },
+  'Desserts': {
+    name: 'Desserts',
+    description: 'Cakes, puddings, ice creams',
+    icon: '🍰',
+    slug: 'desserts'
+  },
+  'Baking': {
+    name: 'Baking',
+    description: 'Bread, pastries, baked treats',
+    icon: '🥖',
+    slug: 'baking'
+  },
+  // Drink categories
+  'Mocktails': {
+    name: 'Mocktails',
+    description: 'Non-alcoholic mixes',
+    icon: '🍹',
+    slug: 'mocktails'
+  },
+  'Cocktails': {
+    name: 'Cocktails',
+    description: 'Alcoholic mixes',
+    icon: '🍸',
+    slug: 'cocktails'
+  },
+  'Smoothies & Juices': {
+    name: 'Smoothies & Juices',
+    description: 'Fruit, veg-based',
+    icon: '🥤',
+    slug: 'smoothies-juices'
+  },
+  'Shakes': {
+    name: 'Shakes',
+    description: 'Milkshakes, protein shakes',
+    icon: '🥛',
+    slug: 'shakes'
   }
 };
 
-// Dietary categories
-export const DIETARY_CATEGORIES: Record<DietaryCategory, CategoryInfo> = {
-  'High Protein': {
-    name: 'High Protein',
-    description: 'Protein-rich recipes for fitness and health',
-    icon: '💪',
-    slug: 'high-protein'
-  },
-  'Low Calorie': {
-    name: 'Low Calorie',
-    description: 'Light, healthy, low-calorie options',
-    icon: '🌱',
-    slug: 'low-calorie'
-  },
+// Dietary tags - updated to match requirements
+export const DIETARY_TAGS: Record<DietaryTag, CategoryInfo> = {
   'Vegetarian': {
     name: 'Vegetarian',
     description: 'Meat-free vegetarian recipes',
@@ -92,69 +106,51 @@ export const DIETARY_CATEGORIES: Record<DietaryCategory, CategoryInfo> = {
     icon: '🌾',
     slug: 'gluten-free'
   },
-  'Keto': {
-    name: 'Keto',
+  'Dairy-Free': {
+    name: 'Dairy-Free',
+    description: 'Dairy-free recipes and alternatives',
+    icon: '🥛',
+    slug: 'dairy-free'
+  },
+  'Keto / Low Carb': {
+    name: 'Keto / Low Carb',
     description: 'Low-carb ketogenic diet recipes',
     icon: '🥑',
-    slug: 'keto'
+    slug: 'keto-low-carb'
   },
-  'Paleo': {
-    name: 'Paleo',
-    description: 'Paleo-friendly whole food recipes',
-    icon: '🦴',
-    slug: 'paleo'
+  'High Protein': {
+    name: 'High Protein',
+    description: 'Protein-rich recipes for fitness and health',
+    icon: '💪',
+    slug: 'high-protein'
+  },
+  'Low Calorie': {
+    name: 'Low Calorie',
+    description: 'Light, healthy, low-calorie options',
+    icon: '🌱',
+    slug: 'low-calorie'
+  },
+  'Low Fat': {
+    name: 'Low Fat',
+    description: 'Low-fat healthy recipes',
+    icon: '🥗',
+    slug: 'low-fat'
   }
 };
 
-// Cuisine categories
-export const CUISINE_CATEGORIES: Record<CuisineCategory, CategoryInfo> = {
+// Cuisine tags - updated to match requirements
+export const CUISINE_TAGS: Record<CuisineTag, CategoryInfo> = {
   'Italian': {
     name: 'Italian',
     description: 'Traditional and modern Italian cuisine',
     icon: '🍝',
     slug: 'italian'
   },
-  'Mexican': {
-    name: 'Mexican',
-    description: 'Authentic Mexican flavors and dishes',
-    icon: '🌮',
-    slug: 'mexican'
-  },
-  'Asian': {
-    name: 'Asian',
-    description: 'Various Asian cuisine styles',
-    icon: '🥢',
-    slug: 'asian'
-  },
   'Indian': {
     name: 'Indian',
     description: 'Spicy and aromatic Indian dishes',
     icon: '🍛',
     slug: 'indian'
-  },
-  'Mediterranean': {
-    name: 'Mediterranean',
-    description: 'Fresh Mediterranean flavors',
-    icon: '🫒',
-    slug: 'mediterranean'
-  },
-  'American': {
-    name: 'American',
-    description: 'Classic American comfort food',
-    icon: '🍔',
-    slug: 'american'
-  },
-  'French': {
-    name: 'French',
-    description: 'Elegant French cooking techniques',
-    icon: '🥖',
-    slug: 'french'
-  },
-  'Thai': {
-    name: 'Thai',
-    description: 'Bold and flavorful Thai cuisine',
-    icon: '🍜',
-    slug: 'thai'
   },
   'Chinese': {
     name: 'Chinese',
@@ -167,51 +163,81 @@ export const CUISINE_CATEGORIES: Record<CuisineCategory, CategoryInfo> = {
     description: 'Authentic Japanese dishes',
     icon: '🍣',
     slug: 'japanese'
+  },
+  'Mediterranean': {
+    name: 'Mediterranean',
+    description: 'Fresh Mediterranean flavors',
+    icon: '🫒',
+    slug: 'mediterranean'
+  },
+  'Middle Eastern': {
+    name: 'Middle Eastern',
+    description: 'Rich Middle Eastern cuisine',
+    icon: '🥙',
+    slug: 'middle-eastern'
+  },
+  'Mexican': {
+    name: 'Mexican',
+    description: 'Authentic Mexican flavors and dishes',
+    icon: '🌮',
+    slug: 'mexican'
+  },
+  'British': {
+    name: 'British',
+    description: 'Classic British comfort food',
+    icon: '🍽️',
+    slug: 'british'
+  },
+  'American': {
+    name: 'American',
+    description: 'Classic American comfort food',
+    icon: '🍔',
+    slug: 'american'
   }
 };
 
-// Drink categories
-export const DRINK_CATEGORIES: Record<DrinkCategory, CategoryInfo> = {
-  'Cocktail': {
-    name: 'Cocktail',
-    description: 'Alcoholic cocktails and mixed drinks',
-    icon: '🍸',
-    slug: 'cocktail'
+// Occasion tags - updated to match requirements
+export const OCCASION_TAGS: Record<OccasionTag, CategoryInfo> = {
+  'Quick Meals': {
+    name: 'Quick Meals',
+    description: 'Under 30 minutes',
+    icon: '⚡',
+    slug: 'quick-meals'
   },
-  'Mocktail': {
-    name: 'Mocktail',
-    description: 'Non-alcoholic cocktails and virgin drinks',
-    icon: '🍹',
-    slug: 'mocktail'
+  'Meal Prep': {
+    name: 'Meal Prep',
+    description: 'Perfect for meal preparation',
+    icon: '📦',
+    slug: 'meal-prep'
   },
-  'Smoothie': {
-    name: 'Smoothie',
-    description: 'Healthy fruit and vegetable smoothies',
-    icon: '🥤',
-    slug: 'smoothie'
+  'Comfort Food': {
+    name: 'Comfort Food',
+    description: 'Cozy and comforting dishes',
+    icon: '🏠',
+    slug: 'comfort-food'
   },
-  'Hot Drinks': {
-    name: 'Hot Drinks',
-    description: 'Warm beverages and hot drinks',
-    icon: '☕',
-    slug: 'hot-drinks'
+  'Party Food': {
+    name: 'Party Food',
+    description: 'Perfect for gatherings and parties',
+    icon: '🎉',
+    slug: 'party-food'
   },
-  'Cold Drinks': {
-    name: 'Cold Drinks',
-    description: 'Refreshing cold beverages',
-    icon: '🧊',
-    slug: 'cold-drinks'
+  'Kids Friendly': {
+    name: 'Kids Friendly',
+    description: 'Kid-approved recipes',
+    icon: '👶',
+    slug: 'kids-friendly'
   },
-  'Juices': {
-    name: 'Juices',
-    description: 'Fresh fruit and vegetable juices',
-    icon: '🧃',
-    slug: 'juices'
+  'Seasonal': {
+    name: 'Seasonal',
+    description: 'Christmas, Summer BBQ, etc.',
+    icon: '🌤️',
+    slug: 'seasonal'
   }
 };
 
 // Helper functions
-export function getCategoryInfo(categoryType: 'main' | 'dietary' | 'cuisine' | 'drink', categoryName: string): CategoryInfo | null {
+export function getCategoryInfo(categoryType: 'main' | 'dietary' | 'cuisine' | 'occasion', categoryName: string): CategoryInfo | null {
   // Convert slug back to proper name format
   const properName = categoryName.split('-').map(word => 
     word.charAt(0).toUpperCase() + word.slice(1)
@@ -221,11 +247,11 @@ export function getCategoryInfo(categoryType: 'main' | 'dietary' | 'cuisine' | '
     case 'main':
       return MAIN_CATEGORIES[properName as MainCategory] || null;
     case 'dietary':
-      return DIETARY_CATEGORIES[properName as DietaryCategory] || null;
+      return DIETARY_TAGS[properName as DietaryTag] || null;
     case 'cuisine':
-      return CUISINE_CATEGORIES[properName as CuisineCategory] || null;
-    case 'drink':
-      return DRINK_CATEGORIES[properName as DrinkCategory] || null;
+      return CUISINE_TAGS[properName as CuisineTag] || null;
+    case 'occasion':
+      return OCCASION_TAGS[properName as OccasionTag] || null;
     default:
       return null;
   }
@@ -235,23 +261,46 @@ export function getAllCategories(): {
   main: CategoryInfo[];
   dietary: CategoryInfo[];
   cuisine: CategoryInfo[];
-  drink: CategoryInfo[];
+  occasion: CategoryInfo[];
 } {
   return {
     main: Object.values(MAIN_CATEGORIES),
-    dietary: Object.values(DIETARY_CATEGORIES),
-    cuisine: Object.values(CUISINE_CATEGORIES),
-    drink: Object.values(DRINK_CATEGORIES)
+    dietary: Object.values(DIETARY_TAGS),
+    cuisine: Object.values(CUISINE_TAGS),
+    occasion: Object.values(OCCASION_TAGS)
   };
 }
 
 export function getCategoryBySlug(slug: string): CategoryInfo | null {
   const allCategories = [
     ...Object.values(MAIN_CATEGORIES),
-    ...Object.values(DIETARY_CATEGORIES),
-    ...Object.values(CUISINE_CATEGORIES),
-    ...Object.values(DRINK_CATEGORIES)
+    ...Object.values(DIETARY_TAGS),
+    ...Object.values(CUISINE_TAGS),
+    ...Object.values(OCCASION_TAGS)
   ];
   
   return allCategories.find(cat => cat.slug === slug) || null;
+}
+
+// Get all available tags
+export function getAllTags(): RecipeTag[] {
+  return [
+    ...Object.keys(DIETARY_TAGS),
+    ...Object.keys(CUISINE_TAGS),
+    ...Object.keys(OCCASION_TAGS)
+  ] as RecipeTag[];
+}
+
+// Get tag info by tag name
+export function getTagInfo(tag: RecipeTag): CategoryInfo | null {
+  if (tag in DIETARY_TAGS) {
+    return DIETARY_TAGS[tag as DietaryTag];
+  }
+  if (tag in CUISINE_TAGS) {
+    return CUISINE_TAGS[tag as CuisineTag];
+  }
+  if (tag in OCCASION_TAGS) {
+    return OCCASION_TAGS[tag as OccasionTag];
+  }
+  return null;
 }

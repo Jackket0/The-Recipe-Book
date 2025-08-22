@@ -1,25 +1,26 @@
+import React from 'react';
+import { useRouter } from 'next/router';
 import { GetStaticProps } from 'next';
-import Link from 'next/link';
 import Layout from '@/components/Layout';
 import RecipeCard from '@/components/RecipeCard';
 import { Recipe } from '@/types/recipe';
 import { getAllRecipes } from '@/lib/recipes';
-import { DRINK_CATEGORIES } from '@/lib/categories';
+import { MAIN_CATEGORIES, MainCategory } from '@/lib/categories';
 
 interface DrinksProps {
   recipes: Recipe[];
 }
 
 export default function Drinks({ recipes }: DrinksProps): JSX.Element {
-  // Filter recipes to show only drinks (you can adjust this logic based on your recipe structure)
-  const drinkRecipes = recipes.filter(recipe => 
-    recipe.category?.toLowerCase().includes('drink') || 
-    recipe.tags?.some(tag => tag.toLowerCase().includes('drink')) ||
-    recipe.title.toLowerCase().includes('drink') ||
-    recipe.title.toLowerCase().includes('cocktail') ||
-    recipe.title.toLowerCase().includes('smoothie') ||
-    recipe.title.toLowerCase().includes('juice')
-  );
+  const router = useRouter();
+  
+  // Filter recipes to show only drinks (using the new drink categories)
+  const drinkCategories: MainCategory[] = ['Mocktails'];
+  const drinkRecipes = recipes.filter(recipe => drinkCategories.includes(recipe.category));
+
+  const handleCategoryClick = (slug: string) => {
+    router.push(`/recipes/category/${slug}`);
+  };
 
   return (
     <Layout
@@ -89,17 +90,20 @@ export default function Drinks({ recipes }: DrinksProps): JSX.Element {
             </div>
             
             <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
-              {Object.values(DRINK_CATEGORIES).map((category) => (
-                <Link
-                  key={category.slug}
-                  href={`/recipes/drinks/${category.slug}`}
-                  className="bg-white rounded-lg p-6 text-center shadow-sm hover:shadow-lg transition-shadow duration-200 group"
-                >
-                  <div className="text-4xl mb-3 group-hover:scale-110 transition-transform duration-200">{category.icon}</div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2 group-hover:text-orange-600 transition-colors">{category.name}</h3>
-                  <p className="text-sm text-gray-600">{category.description}</p>
-                </Link>
-              ))}
+              {drinkCategories.map((category) => {
+                const categoryInfo = MAIN_CATEGORIES[category];
+                return (
+                  <div
+                    key={categoryInfo.slug}
+                    onClick={() => handleCategoryClick(categoryInfo.slug)}
+                    className="block bg-white rounded-lg p-6 text-center shadow-sm hover:shadow-lg transition-shadow duration-200 group cursor-pointer"
+                  >
+                    <span className="block text-4xl mb-3 group-hover:scale-110 transition-transform duration-200">{categoryInfo.icon}</span>
+                    <h3 className="text-lg font-semibold text-gray-900 mb-2 group-hover:text-orange-600 transition-colors">{categoryInfo.name}</h3>
+                    <p className="text-sm text-gray-600">{categoryInfo.description}</p>
+                  </div>
+                );
+              })}
             </div>
           </section>
         </div>

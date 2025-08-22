@@ -10,7 +10,7 @@ A beautiful, modern recipe website built with Next.js, TypeScript, and Tailwind 
 - **Markdown-Based Recipes**: Easy-to-write recipe files with frontmatter metadata
 - **Responsive Design**: Beautiful on desktop, tablet, and mobile devices
 - **Recipe Categories**: Organize recipes by type (Desserts, Main Dishes, Salads, etc.)
-- **Search & Filter**: Find recipes by name, description, or tags
+- **Search & Filter**: Find recipes by name, description, ingredients, or tags with real-time search
 - **SEO Optimized**: Static generation for fast loading and great SEO
 - **Easy Deployment**: Ready for Vercel, Netlify, or any static hosting
 
@@ -210,7 +210,9 @@ The project uses ESLint and Prettier for consistent code formatting. Configurati
 Here are some ideas for extending your recipe website:
 
 ### 🔍 Search & Discovery
-- [ ] Full-text search functionality
+- [x] Full-text search functionality with real-time results
+- [x] Search across recipe titles, descriptions, ingredients, and tags
+- [x] Keyboard shortcut (Ctrl+K) for quick search access
 - [ ] Advanced filtering (dietary restrictions, cooking time, etc.)
 - [ ] Recipe recommendations based on ingredients
 - [ ] Popular/trending recipes section

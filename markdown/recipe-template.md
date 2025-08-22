@@ -1,103 +1,121 @@
 ---
-title: "Recipe Title Here"
-description: "Brief description of the dish - what makes it special, key flavors, or why someone would want to make it"
-category: "Main Dishes" # Options: Main Dishes, Appetizers, Desserts, Baked Goods, Beverages, Salads, Soups, Side Dishes, Snacks
-image: "/images/recipe-name.jpg" # Image filename should match the recipe slug
-prepTime: "X minutes" # Time to prepare ingredients (e.g., "15 minutes", "30 minutes", "1 hour")
-cookTime: "X minutes" # Active cooking time (e.g., "25 minutes", "1 hour 30 minutes")
-servings: X # Number as integer (e.g., 4, 6, 8)
-difficulty: "Easy" # Options: Easy, Medium, Hard
-ingredients:
-  - "Ingredient 1 with measurements (e.g., '2 cups all-purpose flour')"
-  - "Ingredient 2 with measurements"
-  - "Ingredient 3 with measurements"
-  - "Continue for all ingredients..."
-  # Group related ingredients with comments if helpful:
-  # For the marinade:
-  # For the sauce:
-  # For garnish:
-instructions:
-  - "Step 1: Clear, actionable instruction with specific details"
-  - "Step 2: Next instruction in logical order"
-  - "Step 3: Include temperatures, times, and visual cues"
-  - "Step 4: Continue with all steps needed to complete the recipe"
-  - "Final step: Include serving suggestions and storage instructions"
+title: "Recipe Title"
+description: "A brief description of the recipe (1-2 sentences)"
+category: "Main Category"
 tags:
-  - "tag1" # Use lowercase, descriptive tags
-  - "tag2" # Examples: "vegetarian", "gluten-free", "spicy", "comfort food"
-  - "tag3" # Include main ingredients, cooking method, or meal type
-dateCreated: "YYYY-MM-DD" # Use ISO date format (e.g., "2024-01-15")
+  - "Tag 1"
+  - "Tag 2"
+  - "Tag 3"
+image: "/images/recipe-name.jpg"
+prepTime: "X minutes"
+cookTime: "X minutes"
+servings: X
+difficulty: "Easy|Medium|Hard"
+ingredients:
+  - "Ingredient 1"
+  - "Ingredient 2"
+  - "Ingredient 3"
+instructions:
+  - "Step 1"
+  - "Step 2"
+  - "Step 3"
+dateCreated: "YYYY-MM-DD"
 ---
 
-Write a brief introduction paragraph here that expands on the description. Explain what makes this recipe special, any personal story behind it, or what occasions it's perfect for.
+## Main Categories (Required - choose one)
 
-## Tips for Success
+### Food Categories
+- **Mains** - Meat, fish, vegetarian mains
+- **Sides** - Vegetables, breads, accompaniments
+- **Snacks** - Finger foods, light bites
+- **Breakfast & Brunch** - Pancakes, eggs, cereals
+- **Lunch** - Quick meals, salads, sandwiches
+- **Dinner** - Heavier meals, multi-course
+- **Desserts** - Cakes, puddings, ice creams
+- **Baking** - Bread, pastries, baked treats
 
-- **Tip 1**: Important technique or ingredient note
-- **Tip 2**: Common mistakes to avoid or key success factors
-- **Tip 3**: Visual cues or doneness indicators
-- **Additional tips**: Any other helpful advice for best results
+### Drink Categories
+- **Mocktails** - Non-alcoholic mixes
+- **Cocktails** - Alcoholic mixes
+- **Smoothies & Juices** - Fruit, veg-based
+- **Shakes** - Milkshakes, protein shakes
 
-## Variations
+## Tags (Optional - choose multiple)
 
-- **Variation 1**: How to modify the recipe (e.g., different proteins, spice levels)
-- **Variation 2**: Seasonal or dietary substitutions
-- **Variation 3**: Different flavor profiles or cooking methods
-- **Make it [dietary restriction]**: Specific modifications for dietary needs
+### Dietary Needs
+- Vegetarian
+- Vegan
+- Gluten-Free
+- Dairy-Free
+- Keto / Low Carb
+- High Protein
+- Low Calorie
+- Low Fat
 
-## Storage
+### Cuisine
+- Italian
+- Indian
+- Chinese
+- Japanese
+- Mediterranean
+- Middle Eastern
+- Mexican
+- British
+- American
 
-- **Room temperature**: How long and storage method
-- **Refrigerator**: Duration and best practices
-- **Freezer**: Freezing instructions and duration
-- **Reheating**: Best methods to reheat if applicable
+### Occasions
+- Quick Meals (under 30 mins)
+- Meal Prep
+- Comfort Food
+- Party Food
+- Kids Friendly
+- Seasonal (Christmas, Summer BBQ, etc.)
 
-## Serving Suggestions
+## Example Recipe
 
-- List complementary dishes, sides, or beverages
-- Include garnish ideas or presentation tips
-- Mention any traditional accompaniments
-
+```yaml
+---
+title: "Spaghetti Carbonara"
+description: "Classic Italian pasta dish with eggs, cheese, and pancetta. Simple ingredients create a rich, creamy sauce."
+category: "Mains"
+tags:
+  - "High Protein"
+  - "Italian"
+  - "Quick Meals"
+  - "Comfort Food"
+image: "/images/spaghetti-carbonara.jpg"
+prepTime: "10 minutes"
+cookTime: "15 minutes"
+servings: 4
+difficulty: "Medium"
+ingredients:
+  - "1 lb spaghetti"
+  - "4 large eggs"
+  - "1 cup grated Pecorino Romano cheese"
+  - "4 oz pancetta, diced"
+  - "4 cloves garlic, minced"
+  - "Black pepper to taste"
+  - "Salt for pasta water"
+instructions:
+  - "Bring a large pot of salted water to boil and cook spaghetti according to package directions."
+  - "In a large skillet, cook pancetta over medium heat until crispy."
+  - "In a bowl, whisk together eggs, cheese, and black pepper."
+  - "Drain pasta, reserving 1 cup of pasta water."
+  - "Add hot pasta to skillet with pancetta, remove from heat."
+  - "Quickly stir in egg mixture, adding pasta water as needed for creaminess."
+  - "Serve immediately with extra cheese and black pepper."
+dateCreated: "2024-01-20"
 ---
 
-## Template Usage Notes:
+Recipe content goes here...
+```
 
-### Required Fields (must be filled):
-- `title`: Descriptive recipe name
-- `category`: Choose from the predefined categories
-- `ingredients`: Complete list with measurements
-- `instructions`: Step-by-step directions
-- `dateCreated`: Date you created the recipe
+## Important Notes
 
-### Optional but Recommended:
-- `description`: Helps with SEO and recipe discovery
-- `image`: Add corresponding image to `/public/images/`
-- `prepTime` & `cookTime`: Helps users plan
-- `servings`: Important for scaling
-- `difficulty`: Helps users choose appropriate recipes
-- `tags`: Improves searchability
-
-### Content Sections:
-- Main content paragraph is required
-- Tips, Variations, Storage, and Serving Suggestions are optional but encouraged
-- Remove any sections you don't use
-
-### File Naming:
-- Save as: `recipe-name-slug.md` (lowercase, hyphens for spaces)
-- Image should be: `recipe-name-slug.jpg` in `/public/images/`
-
-### Categories Available:
-- Main Dishes
-- Appetizers  
-- Desserts
-- Baked Goods
-- Beverages
-- Salads
-- Soups
-- Side Dishes
-- Snacks
-
-### Difficulty Levels:
-- **Easy**: Basic techniques, common ingredients, hard to mess up
-- **Medium**: Some skill required, multiple steps or techniques
-- **Hard**: Advanced techniques, precise timing, or complex processes
+1. **Category is required** and must be one of the defined main categories
+2. **Tags are optional** but recommended for better discoverability
+3. **Tags should match the predefined list** for consistency
+4. **Image path** should point to a file in `/public/images/`
+5. **Date format** should be YYYY-MM-DD
+6. **Difficulty** must be one of: Easy, Medium, or Hard
+7. **Ingredients and instructions** should be clear and concise

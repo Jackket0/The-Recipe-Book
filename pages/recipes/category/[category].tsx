@@ -3,17 +3,22 @@ import { useState, ChangeEvent } from 'react';
 import Link from 'next/link';
 import Layout from '@/components/Layout';
 import RecipeCard from '@/components/RecipeCard';
-import { Recipe } from '@/types/recipe';
-import { getAllRecipes, getCategories, getRecipesByMainCategory } from '@/lib/recipes';
+import { Recipe, MainCategory } from '@/types/recipe';
+import { getAllRecipes, getCategories, getRecipesByCategory } from '@/lib/recipes';
 import { MAIN_CATEGORIES, getCategoryInfo } from '@/lib/categories';
 
 interface CategoryPageProps {
   recipes: Recipe[];
-  category: string;
-  allCategories: string[];
+  category: MainCategory;
+  allCategories: MainCategory[];
+  categoryInfo: {
+    name: string;
+    description: string;
+    icon: string;
+  } | null;
 }
 
-export default function CategoryPage({ recipes, category, allCategories }: CategoryPageProps): JSX.Element {
+export default function CategoryPage({ recipes, category, allCategories, categoryInfo }: CategoryPageProps): JSX.Element {
   const [searchTerm, setSearchTerm] = useState<string>('');
 
   const handleSearchChange = (e: ChangeEvent<HTMLInputElement>): void => {
@@ -25,18 +30,16 @@ export default function CategoryPage({ recipes, category, allCategories }: Categ
       searchTerm === '' ||
       recipe.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
       (recipe.description?.toLowerCase().includes(searchTerm.toLowerCase()) ?? false) ||
-      (recipe.tags?.some((tag: string): boolean =>
+      recipe.tags.some((tag: string): boolean =>
         tag.toLowerCase().includes(searchTerm.toLowerCase())
-      ) ?? false)
+      )
     );
   });
 
-  const categoryDisplayName: string = category.charAt(0).toUpperCase() + category.slice(1);
-
   return (
     <Layout
-      title={`${categoryDisplayName} Recipes - The Recipe Book`}
-      description={`Discover delicious ${category.toLowerCase()} recipes. Browse our collection of ${recipes.length} ${category.toLowerCase()} recipes.`}
+      title={`${categoryInfo?.name || category} Recipes - The Recipe Book`}
+      description={`Discover delicious ${categoryInfo?.name.toLowerCase() || category.toLowerCase()} recipes. Browse our collection of ${recipes.length} ${categoryInfo?.name.toLowerCase() || category.toLowerCase()} recipes.`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Breadcrumb */}
@@ -63,18 +66,28 @@ export default function CategoryPage({ recipes, category, allCategories }: Categ
               </svg>
             </li>
             <li className="text-gray-900 font-medium">
-              {categoryDisplayName}
+              {categoryInfo?.name || category}
             </li>
           </ol>
         </nav>
 
         {/* Header */}
         <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">
-            {categoryDisplayName} Recipes
-          </h1>
+          <div className="flex items-center justify-center mb-4">
+            {categoryInfo?.icon && (
+              <span className="text-4xl mr-3">{categoryInfo.icon}</span>
+            )}
+            <h1 className="text-4xl font-bold text-gray-900">
+              {categoryInfo?.name || category} Recipes
+            </h1>
+          </div>
+          {categoryInfo?.description && (
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto mb-4">
+              {categoryInfo.description}
+            </p>
+          )}
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Explore our collection of {recipes.length} delicious {category.toLowerCase()} recipes
+            Explore our collection of {recipes.length} delicious {categoryInfo?.name.toLowerCase() || category.toLowerCase()} recipes
           </p>
         </div>
 
@@ -88,19 +101,22 @@ export default function CategoryPage({ recipes, category, allCategories }: Categ
             >
               All Recipes
             </Link>
-            {allCategories.map((cat) => (
-              <Link
-                key={cat}
-                href={`/recipes/category/${cat.toLowerCase().replace(/\s+/g, '-')}`}
-                className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
-                  cat.toLowerCase() === category.toLowerCase()
-                    ? 'bg-primary-600 text-white'
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                }`}
-              >
-                {cat}
-              </Link>
-            ))}
+            {allCategories.map((cat) => {
+              const catInfo = MAIN_CATEGORIES[cat];
+              return (
+                <Link
+                  key={cat}
+                  href={`/recipes/category/${catInfo?.slug || cat.toLowerCase().replace(/\s+/g, '-')}`}
+                  className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+                    cat === category
+                      ? 'bg-primary-600 text-white'
+                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  }`}
+                >
+                  {catInfo?.name || cat}
+                </Link>
+              );
+            })}
           </div>
         </div>
 
@@ -109,7 +125,7 @@ export default function CategoryPage({ recipes, category, allCategories }: Categ
           <div className="relative w-full max-w-md">
             <input
               type="text"
-              placeholder={`Search ${category.toLowerCase()} recipes...`}
+              placeholder={`Search ${categoryInfo?.name.toLowerCase() || category.toLowerCase()} recipes...`}
               value={searchTerm}
               onChange={handleSearchChange}
               className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 text-sm"
@@ -136,7 +152,7 @@ export default function CategoryPage({ recipes, category, allCategories }: Categ
             {searchTerm && (
               <div className="mb-6 text-center">
                 <p className="text-gray-600">
-                  Showing {filteredRecipes.length} of {recipes.length} {category.toLowerCase()} recipes
+                  Showing {filteredRecipes.length} of {recipes.length} {categoryInfo?.name.toLowerCase() || category.toLowerCase()} recipes
                   {searchTerm && ` matching "${searchTerm}"`}
                 </p>
               </div>
@@ -169,8 +185,8 @@ export default function CategoryPage({ recipes, category, allCategories }: Categ
             </h3>
             <p className="text-gray-600 mb-4">
               {searchTerm
-                ? `No ${category.toLowerCase()} recipes match "${searchTerm}". Try a different search term.`
-                : `No recipes found in the ${category.toLowerCase()} category.`}
+                ? `No ${categoryInfo?.name.toLowerCase() || category.toLowerCase()} recipes match "${searchTerm}". Try a different search term.`
+                : `No recipes found in the ${categoryInfo?.name.toLowerCase() || category.toLowerCase()} category.`}
             </p>
             <Link
               href="/recipes"
@@ -188,55 +204,56 @@ export default function CategoryPage({ recipes, category, allCategories }: Categ
 export const getStaticPaths: GetStaticPaths = async () => {
   const categories = await getCategories();
   
-  const paths = categories.map((category) => ({
-    params: { 
-      category: category.toLowerCase().replace(/\s+/g, '-') 
-    },
-  }));
+  const paths = categories.map((category) => {
+    const categoryInfo = MAIN_CATEGORIES[category];
+    return {
+      params: { 
+        category: categoryInfo?.slug || category.toLowerCase().replace(/\s+/g, '-') 
+      },
+    };
+  });
 
   return {
     paths,
-    fallback: 'blocking',
+    fallback: false,
   };
 };
 
 export const getStaticProps: GetStaticProps<CategoryPageProps> = async ({ params }) => {
-  const categoryParam = params?.category as string;
+  const categorySlug = params?.category as string;
   
-  if (!categoryParam) {
+  if (!categorySlug) {
     return {
       notFound: true,
     };
   }
 
-  // Convert URL slug back to category name
-  const categoryName = categoryParam.replace(/-/g, ' ');
-  
-  const allRecipes = await getAllRecipes();
+  // Find the category by slug
   const allCategories = await getCategories();
-  
-  // Find recipes matching this category (case insensitive)
-  const recipes: Recipe[] = allRecipes.filter((recipe: Recipe): boolean => 
-    recipe.category.toLowerCase() === categoryName.toLowerCase()
-  );
+  const category = allCategories.find((cat) => {
+    const categoryInfo = MAIN_CATEGORIES[cat];
+    return categoryInfo?.slug === categorySlug;
+  });
 
-  // If no recipes found for this category, return 404
-  if (recipes.length === 0) {
+  if (!category) {
     return {
       notFound: true,
     };
   }
 
-  // Find the actual category name with proper casing
-  const actualCategory: string = allCategories.find((cat: string): boolean => 
-    cat.toLowerCase() === categoryName.toLowerCase()
-  ) || categoryName;
+  const recipes = await getRecipesByCategory(category);
+  const categoryInfo = MAIN_CATEGORIES[category];
 
   return {
     props: {
       recipes,
-      category: actualCategory,
+      category,
       allCategories,
+      categoryInfo: categoryInfo ? {
+        name: categoryInfo.name,
+        description: categoryInfo.description,
+        icon: categoryInfo.icon,
+      } : null,
     },
     revalidate: 60,
   };

@@ -1,7 +1,11 @@
 ---
 title: "Moist Banana Bread"
 description: "The ultimate banana bread recipe that's incredibly moist, perfectly sweet, and loaded with banana flavor. Uses overripe bananas for the best taste."
-category: "Baked Goods"
+category: "Baking"
+tags:
+  - "Vegetarian"
+  - "Comfort Food"
+  - "Kids Friendly"
 image: "/images/banana-bread.jpg"
 prepTime: "15 minutes"
 cookTime: "60-65 minutes"
@@ -29,12 +33,6 @@ instructions:
   - "Bake for 60-65 minutes, or until a toothpick inserted into the center comes out clean or with just a few moist crumbs."
   - "Cool in the pan for 10 minutes, then turn out onto a wire rack to cool completely."
   - "Slice and serve. Store covered at room temperature for up to 4 days."
-tags:
-  - "banana"
-  - "bread"
-  - "baking"
-  - "breakfast"
-  - "snack"
 dateCreated: "2024-01-08"
 ---
 

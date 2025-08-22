@@ -4,6 +4,7 @@ import Link from 'next/link';
 import Layout from '@/components/Layout';
 import { Recipe } from '@/types/recipe';
 import { getAllRecipes, getRecipeBySlug } from '@/lib/recipes';
+import { CategoryBadge, TagBadge } from '@/components/CategoryBadge';
 
 interface RecipePageProps {
   recipe: Recipe;
@@ -56,10 +57,11 @@ export default function RecipePage({ recipe }: RecipePageProps): JSX.Element {
         )}
 
         {/* Category Badge and other badges */}
-        <div className="flex flex-wrap items-center gap-2 mb-6">
-          <span className="bg-primary-100 text-primary-800 px-4 py-2 rounded-full text-sm font-medium">
-            {recipe.category}
-          </span>
+        <div className="flex flex-wrap items-center gap-3 mb-6">
+          <CategoryBadge 
+            category={recipe.category} 
+            isClickable={true}
+          />
           {recipe.difficulty && (
             <span
               className={`px-4 py-2 rounded-full text-sm font-medium text-white ${
@@ -73,15 +75,20 @@ export default function RecipePage({ recipe }: RecipePageProps): JSX.Element {
               {recipe.difficulty}
             </span>
           )}
-          {recipe.tags?.map((tag) => (
-            <span
-              key={tag}
-              className="bg-gray-100 text-gray-700 px-4 py-2 rounded-full text-sm"
-            >
-              #{tag}
-            </span>
-          ))}
         </div>
+
+        {/* Tags */}
+        {recipe.tags && recipe.tags.length > 0 && (
+          <div className="flex flex-wrap items-center gap-2 mb-6">
+            {recipe.tags.map((tag, index) => (
+              <TagBadge 
+                key={index} 
+                tag={tag} 
+                isClickable={true}
+              />
+            ))}
+          </div>
+        )}
 
         {recipe.description && (
           <p className="text-xl text-gray-600 mb-6">{recipe.description}</p>

@@ -3,8 +3,8 @@ import path from 'path';
 import matter from 'gray-matter';
 import { remark } from 'remark';
 import html from 'remark-html';
-import { Recipe, RecipeFrontMatter, MainCategory, CategoryStructure } from '@/types/recipe';
-import { MAIN_CATEGORIES, DIETARY_CATEGORIES, CUISINE_CATEGORIES, DRINK_CATEGORIES } from './categories';
+import { Recipe, RecipeFrontMatter, MainCategory, RecipeTag } from '@/types/recipe';
+import { MAIN_CATEGORIES, getAllTags, getTagInfo } from './categories';
 
 const recipesDirectory = path.join(process.cwd(), 'content/recipes');
 
@@ -35,13 +35,32 @@ export async function getRecipeBySlug(slug: string): Promise<Recipe | null> {
     
     const frontMatter = data as RecipeFrontMatter;
     
+    // Validate category
+    if (!frontMatter.category || !(frontMatter.category in MAIN_CATEGORIES)) {
+      console.warn(`Invalid category "${frontMatter.category}" in recipe ${slug}`);
+      return null;
+    }
+    
+    // Validate and filter tags
+    const validTags: RecipeTag[] = [];
+    const allValidTags = getAllTags();
+    
+    if (frontMatter.tags) {
+      frontMatter.tags.forEach(tag => {
+        if (allValidTags.includes(tag as RecipeTag)) {
+          validTags.push(tag as RecipeTag);
+        } else {
+          console.warn(`Invalid tag "${tag}" in recipe ${slug}`);
+        }
+      });
+    }
+    
     return {
       slug,
       title: frontMatter.title,
       description: frontMatter.description || null,
-      category: frontMatter.category,
-      mainCategory: frontMatter.mainCategory || null,
-      categoryStructure: frontMatter.categoryStructure || null,
+      category: frontMatter.category as MainCategory,
+      tags: validTags,
       image: frontMatter.image || null,
       prepTime: frontMatter.prepTime || null,
       cookTime: frontMatter.cookTime || null,
@@ -49,7 +68,6 @@ export async function getRecipeBySlug(slug: string): Promise<Recipe | null> {
       difficulty: frontMatter.difficulty || null,
       ingredients: frontMatter.ingredients || [],
       instructions: frontMatter.instructions || [],
-      tags: frontMatter.tags || null,
       dateCreated: frontMatter.dateCreated || null,
       dateModified: frontMatter.dateModified || null,
       content: contentHtml,
@@ -77,85 +95,107 @@ export async function getAllRecipes(): Promise<Recipe[]> {
     });
 }
 
-export async function getRecipesByCategory(category: string): Promise<Recipe[]> {
+export async function getRecipesByCategory(category: MainCategory): Promise<Recipe[]> {
   const recipes = await getAllRecipes();
   return recipes.filter((recipe: Recipe): boolean => 
-    recipe.category.toLowerCase() === category.toLowerCase()
+    recipe.category === category
   );
 }
 
-export async function getCategories(): Promise<string[]> {
+export async function getRecipesByTag(tag: RecipeTag): Promise<Recipe[]> {
+  const recipes = await getAllRecipes();
+  return recipes.filter((recipe: Recipe): boolean => 
+    recipe.tags.includes(tag)
+  );
+}
+
+export async function getRecipesByTags(tags: RecipeTag[]): Promise<Recipe[]> {
+  const recipes = await getAllRecipes();
+  return recipes.filter((recipe: Recipe): boolean => 
+    tags.some(tag => recipe.tags.includes(tag))
+  );
+}
+
+export async function getCategories(): Promise<MainCategory[]> {
   const recipes: Recipe[] = await getAllRecipes();
-  const categories: string[] = Array.from(
-    new Set(recipes.map((recipe: Recipe): string => recipe.category))
+  const categories: MainCategory[] = Array.from(
+    new Set(recipes.map((recipe: Recipe): MainCategory => recipe.category))
   );
   return categories.sort();
 }
 
-// New category-specific functions
-export async function getRecipesByMainCategory(mainCategory: MainCategory): Promise<Recipe[]> {
-  const recipes = await getAllRecipes();
-  return recipes.filter((recipe: Recipe): boolean => 
-    recipe.mainCategory === mainCategory ||
-    // Fallback for backward compatibility
-    recipe.category.toLowerCase() === mainCategory.toLowerCase()
-  );
-}
-
-export async function getRecipesByDietaryCategory(dietaryCategory: string): Promise<Recipe[]> {
-  const recipes = await getAllRecipes();
-  return recipes.filter((recipe: Recipe): boolean => 
-    recipe.categoryStructure?.dietary?.some(dietary => dietary === dietaryCategory) ||
-    recipe.tags?.some(tag => tag.toLowerCase().includes(dietaryCategory.toLowerCase())) ||
-    recipe.category.toLowerCase().includes(dietaryCategory.toLowerCase())
-  );
-}
-
-export async function getRecipesByCuisine(cuisine: string): Promise<Recipe[]> {
-  const recipes = await getAllRecipes();
-  return recipes.filter((recipe: Recipe): boolean => 
-    recipe.categoryStructure?.cuisine === cuisine ||
-    recipe.tags?.some((tag: string): boolean => tag.toLowerCase().includes(cuisine.toLowerCase())) ||
-    recipe.category.toLowerCase().includes(cuisine.toLowerCase())
-  );
-}
-
-export async function getRecipesByDrinkType(drinkType: string): Promise<Recipe[]> {
-  const recipes = await getAllRecipes();
-  return recipes.filter((recipe: Recipe): boolean => 
-    recipe.categoryStructure?.drinkType === drinkType ||
-    recipe.tags?.some((tag: string): boolean => tag.toLowerCase().includes(drinkType.toLowerCase())) ||
-    recipe.category.toLowerCase().includes(drinkType.toLowerCase()) ||
-    recipe.title.toLowerCase().includes(drinkType.toLowerCase())
-  );
-}
-
-export async function getMainCategories(): Promise<MainCategory[]> {
-  const recipes = await getAllRecipes();
-  const mainCategories = new Set<MainCategory>();
+export async function getTags(): Promise<RecipeTag[]> {
+  const recipes: Recipe[] = await getAllRecipes();
+  const allTags: RecipeTag[] = [];
   
   recipes.forEach(recipe => {
-    if (recipe.mainCategory) {
-      mainCategories.add(recipe.mainCategory);
-    }
-    // Map existing categories to main categories
-    const category = recipe.category.toLowerCase();
-    if (category.includes('main') || category.includes('dinner') || category.includes('entree')) {
-      mainCategories.add('Mains');
-    } else if (category.includes('side')) {
-      mainCategories.add('Sides');
-    } else if (category.includes('drink') || category.includes('beverage')) {
-      mainCategories.add('Drinks');
-    } else if (category.includes('dessert') || category.includes('sweet')) {
-      mainCategories.add('Desserts');
-    } else if (category.includes('appetizer') || category.includes('starter')) {
-      mainCategories.add('Appetizers');
-    } else if (category.includes('breakfast')) {
-      mainCategories.add('Breakfast');
-    } else if (category.includes('lunch')) {
-      mainCategories.add('Lunch');
-    }
+    recipe.tags.forEach(tag => {
+      if (!allTags.includes(tag)) {
+        allTags.push(tag);
+      }
+    });
   });
   
-  return Array.from(mainCategories).sort();
+  return allTags.sort();
+}
+
+export async function getTagsWithCount(): Promise<{ tag: RecipeTag; count: number }[]> {
+  const recipes: Recipe[] = await getAllRecipes();
+  const tagCounts: Map<RecipeTag, number> = new Map();
+  
+  recipes.forEach(recipe => {
+    recipe.tags.forEach(tag => {
+      tagCounts.set(tag, (tagCounts.get(tag) || 0) + 1);
+    });
+  });
+  
+  return Array.from(tagCounts.entries())
+    .map(([tag, count]) => ({ tag, count }))
+    .sort((a, b) => b.count - a.count);
+}
+
+// Search recipes by multiple criteria
+export async function searchRecipes(filters: {
+  category?: MainCategory;
+  tags?: RecipeTag[];
+  difficulty?: string;
+  searchTerm?: string;
+}): Promise<Recipe[]> {
+  const recipes = await getAllRecipes();
+  
+  return recipes.filter(recipe => {
+    // Filter by category
+    if (filters.category && recipe.category !== filters.category) {
+      return false;
+    }
+    
+    // Filter by tags (any of the specified tags)
+    if (filters.tags && filters.tags.length > 0) {
+      const hasMatchingTag = filters.tags.some(tag => recipe.tags.includes(tag));
+      if (!hasMatchingTag) {
+        return false;
+      }
+    }
+    
+    // Filter by difficulty
+    if (filters.difficulty && recipe.difficulty !== filters.difficulty) {
+      return false;
+    }
+    
+    // Filter by search term
+    if (filters.searchTerm) {
+      const searchLower = filters.searchTerm.toLowerCase();
+      const matchesTitle = recipe.title.toLowerCase().includes(searchLower);
+      const matchesDescription = recipe.description?.toLowerCase().includes(searchLower) || false;
+      const matchesIngredients = recipe.ingredients.some(ingredient => 
+        ingredient.toLowerCase().includes(searchLower)
+      );
+      
+      if (!matchesTitle && !matchesDescription && !matchesIngredients) {
+        return false;
+      }
+    }
+    
+    return true;
+  });
 }

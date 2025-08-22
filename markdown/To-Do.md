@@ -15,31 +15,13 @@ __For me__
 
 6. Ask and update this list for future features and updates.
 
+7. Update the full README.md
+
+8. Update the full Categories.md
+
 __Changes to Pages__
 
-1.Homepage. DONE
-    - Top bar currently wont scale properly when changing side.
-    - Top bar
-        - HOME
-        - FAVORITES
-        - FOOD RECIPES
-        - DRINK RECIPES
-        - BY CATEGORY
-        - ABOUT
-    - Large white space not being used.
-        - Move everything up?
-
-2. Recipes DONE
-    - Add Main and sub Categories 
-        - High Protein
-        - Low calorie
-        - Cuisine
-        - Drinks
-        - Mains
-        - Sides
-        - Mocktail
-        - Cocktail
-    
+1.Homepage.   
 
 __New Features__
 1. next to the ingredients add a toggle for US and metric.

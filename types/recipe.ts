@@ -1,65 +1,70 @@
 // Utility types
 export type RecipeDifficulty = 'Easy' | 'Medium' | 'Hard';
 
-// Main category types
+// Main category types - updated to match requirements
 export type MainCategory = 
+  // Food categories
   | 'Mains' 
   | 'Sides' 
-  | 'Drinks' 
-  | 'Desserts' 
-  | 'Appetizers' 
-  | 'Breakfast' 
-  | 'Lunch' 
-  | 'Dinner';
+  | 'Snacks'
+  | 'Breakfast & Brunch'
+  | 'Lunch'
+  | 'Dinner'
+  | 'Desserts'
+  | 'Baking'
+  // Drink categories
+  | 'Mocktails'
+  | 'Cocktails'
+  | 'Smoothies & Juices'
+  | 'Shakes';
 
-// Dietary and style subcategories
-export type DietaryCategory = 
-  | 'High Protein' 
-  | 'Low Calorie' 
-  | 'Vegetarian' 
-  | 'Vegan' 
-  | 'Gluten-Free' 
-  | 'Keto' 
-  | 'Paleo';
+// Dietary subcategories - updated to match requirements
+export type DietaryTag = 
+  | 'Vegetarian'
+  | 'Vegan'
+  | 'Gluten-Free'
+  | 'Dairy-Free'
+  | 'Keto / Low Carb'
+  | 'High Protein'
+  | 'Low Calorie'
+  | 'Low Fat';
 
-// Cuisine subcategories
-export type CuisineCategory = 
-  | 'Italian' 
-  | 'Mexican' 
-  | 'Asian' 
-  | 'Indian' 
-  | 'Mediterranean' 
-  | 'American' 
-  | 'French' 
-  | 'Thai' 
-  | 'Chinese' 
-  | 'Japanese';
+// Cuisine subcategories - updated to match requirements
+export type CuisineTag = 
+  | 'Italian'
+  | 'Indian'
+  | 'Chinese'
+  | 'Japanese'
+  | 'Mediterranean'
+  | 'Middle Eastern'
+  | 'Mexican'
+  | 'British'
+  | 'American';
 
-// Drink subcategories
-export type DrinkCategory = 
-  | 'Cocktail' 
-  | 'Mocktail' 
-  | 'Smoothie' 
-  | 'Hot Drinks' 
-  | 'Cold Drinks' 
-  | 'Juices';
+// Occasion subcategories - updated to match requirements
+export type OccasionTag = 
+  | 'Quick Meals'
+  | 'Meal Prep'
+  | 'Comfort Food'
+  | 'Party Food'
+  | 'Kids Friendly'
+  | 'Seasonal';
 
-// Category structure
+// Union type for all possible tags
+export type RecipeTag = DietaryTag | CuisineTag | OccasionTag;
+
+// Category structure - simplified to match new requirements
 export interface CategoryStructure {
-  main: MainCategory;
-  dietary?: DietaryCategory[];
-  cuisine?: CuisineCategory;
-  drinkType?: DrinkCategory;
-  subcategories?: string[];
+  category: MainCategory;
+  tags: RecipeTag[];
 }
 
 export interface Recipe {
   slug: string;
   title: string;
   description: string | null;
-  category: string; // Keep backward compatibility
-  mainCategory: MainCategory | null;
-  categoryStructure: CategoryStructure | null;
+  category: MainCategory; // Main category (required)
+  tags: RecipeTag[]; // Array of tags (subcategories)
   image: string | null;
   prepTime: string | null;
   cookTime: string | null;
@@ -67,7 +72,6 @@ export interface Recipe {
   difficulty: RecipeDifficulty | null;
   ingredients: string[];
   instructions: string[];
-  tags: string[] | null;
   dateCreated: string | null;
   dateModified: string | null;
   content: string;
@@ -76,9 +80,8 @@ export interface Recipe {
 export interface RecipeFrontMatter {
   title: string;
   description?: string;
-  category: string; // Keep backward compatibility
-  mainCategory?: MainCategory;
-  categoryStructure?: CategoryStructure;
+  category: MainCategory; // Required main category
+  tags?: RecipeTag[]; // Optional array of tags
   image?: string;
   prepTime?: string;
   cookTime?: string;
@@ -86,7 +89,6 @@ export interface RecipeFrontMatter {
   difficulty?: RecipeDifficulty;
   ingredients: string[];
   instructions: string[];
-  tags?: string[];
   dateCreated?: string;
   dateModified?: string;
 }
@@ -99,8 +101,8 @@ export interface RecipeMetadata {
 }
 
 export interface RecipeFilter {
-  category?: string;
+  category?: MainCategory;
   difficulty?: RecipeDifficulty;
-  tags?: string[];
+  tags?: RecipeTag[];
   searchTerm?: string;
 }

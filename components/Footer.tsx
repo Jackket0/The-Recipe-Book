@@ -3,8 +3,10 @@ import Link from 'next/link';
 
 const Footer: React.FC = () => {
   const [currentYear, setCurrentYear] = useState(2024);
+  const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
+    setIsClient(true);
     setCurrentYear(new Date().getFullYear());
   }, []);
 

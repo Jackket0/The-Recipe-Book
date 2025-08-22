@@ -1,15 +1,24 @@
 import React from 'react';
-import Link from 'next/link';
+import { useRouter } from 'next/router';
 import { Recipe } from '@/types/recipe';
+import { CategoryBadge, TagBadgeSmall } from './CategoryBadge';
 
 interface RecipeCardProps {
   recipe: Recipe;
 }
 
 const RecipeCard: React.FC<RecipeCardProps> = ({ recipe }) => {
+  const router = useRouter();
+
+  const handleClick = () => {
+    router.push(`/recipes/${recipe.slug}`);
+  };
+
   return (
-    <Link href={`/recipes/${recipe.slug}`}>
-      <div className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 overflow-hidden group cursor-pointer">
+    <div 
+      onClick={handleClick}
+      className="block bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 overflow-hidden group cursor-pointer"
+    >
         {/* Image */}
         <div className="relative h-48 w-full">
           {recipe.image ? (
@@ -56,13 +65,11 @@ const RecipeCard: React.FC<RecipeCardProps> = ({ recipe }) => {
         <div className="p-4">
           {/* Category Badge */}
           <div className="mb-3">
-            <Link 
-              href={`/recipes/category/${recipe.category.toLowerCase().replace(/\s+/g, '-')}`}
-              className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary-100 text-primary-800 hover:bg-primary-200 transition-colors"
-              onClick={(e: React.MouseEvent<HTMLAnchorElement>): void => e.stopPropagation()}
-            >
-              {recipe.category}
-            </Link>
+            <CategoryBadge 
+              category={recipe.category} 
+              isClickable={true}
+              className="text-xs"
+            />
           </div>
           
           {/* Title */}
@@ -74,6 +81,24 @@ const RecipeCard: React.FC<RecipeCardProps> = ({ recipe }) => {
             <p className="text-sm text-gray-600 mb-3 line-clamp-2">
               {recipe.description}
             </p>
+          )}
+
+          {/* Tags */}
+          {recipe.tags && recipe.tags.length > 0 && (
+            <div className="mb-3 flex flex-wrap gap-1">
+              {recipe.tags.slice(0, 3).map((tag, index) => (
+                <TagBadgeSmall 
+                  key={index} 
+                  tag={tag} 
+                  isClickable={true}
+                />
+              ))}
+              {recipe.tags.length > 3 && (
+                <span className="text-xs text-gray-500 px-1.5 py-0.5">
+                  +{recipe.tags.length - 3} more
+                </span>
+              )}
+            </div>
           )}
 
           {/* Recipe meta */}
@@ -102,8 +127,7 @@ const RecipeCard: React.FC<RecipeCardProps> = ({ recipe }) => {
             </div>
           </div>
         </div>
-      </div>
-    </Link>
+    </div>
   );
 };
 

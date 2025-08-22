@@ -1,35 +1,41 @@
 import { GetStaticPaths, GetStaticProps } from 'next';
 import Layout from '@/components/Layout';
 import RecipeCard from '@/components/RecipeCard';
-import { Recipe } from '@/types/recipe';
-import { getRecipesByDietaryCategory } from '@/lib/recipes';
-import { DIETARY_CATEGORIES, getCategoryInfo, CategoryInfo } from '@/lib/categories';
+import { Recipe, DietaryTag } from '@/types/recipe';
+import { getRecipesByTag } from '@/lib/recipes';
+import { DIETARY_TAGS, getTagInfo } from '@/lib/categories';
 
 interface DietaryCategoryPageProps {
   recipes: Recipe[];
-  category: string;
-  categoryInfo: CategoryInfo;
+  tag: DietaryTag;
+  tagInfo: {
+    name: string;
+    description: string;
+    icon: string;
+  } | null;
 }
 
-export default function DietaryCategoryPage({ recipes, category, categoryInfo }: DietaryCategoryPageProps): JSX.Element {
+export default function DietaryCategoryPage({ recipes, tag, tagInfo }: DietaryCategoryPageProps): JSX.Element {
   return (
     <Layout
-      title={`${categoryInfo.name} Recipes - The Recipe Book`}
-      description={`Discover delicious ${categoryInfo.name.toLowerCase()} recipes. ${categoryInfo.description}`}
+      title={`${tagInfo?.name || tag} Recipes - The Recipe Book`}
+      description={`Discover delicious ${tagInfo?.name.toLowerCase() || tag.toLowerCase()} recipes. ${tagInfo?.description || ''}`}
     >
       <div className="bg-gray-50 min-h-screen pt-4 lg:pt-6">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Header Section */}
           <div className="text-center mb-8 lg:mb-10">
             <div className="flex items-center justify-center mb-4">
-              <span className="text-6xl mr-4">{categoryInfo.icon}</span>
+              {tagInfo?.icon && <span className="text-6xl mr-4">{tagInfo.icon}</span>}
               <h1 className="text-4xl md:text-5xl font-bold text-gray-900">
-                <span className="text-orange-600">{categoryInfo.name}</span> Recipes
+                <span className="text-orange-600">{tagInfo?.name || tag}</span> Recipes
               </h1>
             </div>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              {categoryInfo.description}
-            </p>
+            {tagInfo?.description && (
+              <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+                {tagInfo.description}
+              </p>
+            )}
             <div className="mt-4 text-sm text-gray-500">
               {recipes.length} recipe{recipes.length !== 1 ? 's' : ''} found
             </div>
@@ -45,13 +51,13 @@ export default function DietaryCategoryPage({ recipes, category, categoryInfo }:
           ) : (
             <div className="text-center py-16">
               <div className="w-24 h-24 mx-auto mb-6 bg-gray-100 rounded-full flex items-center justify-center">
-                <span className="text-4xl">{categoryInfo.icon}</span>
+                {tagInfo?.icon && <span className="text-4xl">{tagInfo.icon}</span>}
               </div>
               <h3 className="text-2xl font-semibold text-gray-900 mb-4">
-                No {categoryInfo.name.toLowerCase()} recipes yet
+                No {tagInfo?.name.toLowerCase() || tag.toLowerCase()} recipes yet
               </h3>
               <p className="text-gray-600 mb-6 max-w-md mx-auto">
-                We're working on adding more {categoryInfo.name.toLowerCase()} recipes. Check back soon!
+                We're working on adding more {tagInfo?.name.toLowerCase() || tag.toLowerCase()} recipes. Check back soon!
               </p>
               <a
                 href="/recipes"
@@ -63,15 +69,15 @@ export default function DietaryCategoryPage({ recipes, category, categoryInfo }:
           )}
 
           {/* Tips Section */}
-          {recipes.length > 0 && (
+          {recipes.length > 0 && tagInfo && (
             <section className="mt-16 py-8">
               <div className="bg-white rounded-lg p-8 shadow-sm">
                 <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center">
-                  <span className="mr-3">{categoryInfo.icon}</span>
-                  {categoryInfo.name} Tips
+                  <span className="mr-3">{tagInfo.icon}</span>
+                  {tagInfo.name} Tips
                 </h2>
                 <div className="grid md:grid-cols-2 gap-6 text-gray-600">
-                  {categoryInfo.name === 'High Protein' && (
+                  {tagInfo.name === 'High Protein' && (
                     <>
                       <div>
                         <h3 className="font-semibold text-gray-800 mb-2">Protein Sources</h3>
@@ -83,7 +89,7 @@ export default function DietaryCategoryPage({ recipes, category, categoryInfo }:
                       </div>
                     </>
                   )}
-                  {categoryInfo.name === 'Low Calorie' && (
+                  {tagInfo.name === 'Low Calorie' && (
                     <>
                       <div>
                         <h3 className="font-semibold text-gray-800 mb-2">Volume Foods</h3>
@@ -95,7 +101,7 @@ export default function DietaryCategoryPage({ recipes, category, categoryInfo }:
                       </div>
                     </>
                   )}
-                  {(categoryInfo.name === 'Vegetarian' || categoryInfo.name === 'Vegan') && (
+                  {(tagInfo.name === 'Vegetarian' || tagInfo.name === 'Vegan') && (
                     <>
                       <div>
                         <h3 className="font-semibold text-gray-800 mb-2">Protein Balance</h3>
@@ -118,40 +124,49 @@ export default function DietaryCategoryPage({ recipes, category, categoryInfo }:
 }
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const paths = Object.values(DIETARY_CATEGORIES).map((category) => ({
-    params: { dietary: category.slug },
+  const paths = Object.values(DIETARY_TAGS).map((tag) => ({
+    params: { dietary: tag.slug },
   }));
 
   return {
     paths,
-    fallback: 'blocking',
+    fallback: false,
   };
 };
 
 export const getStaticProps: GetStaticProps<DietaryCategoryPageProps> = async ({ params }) => {
-  const dietaryParam = params?.dietary as string;
+  const dietarySlug = params?.dietary as string;
   
-  if (!dietaryParam) {
+  if (!dietarySlug) {
     return {
       notFound: true,
     };
   }
 
-  const categoryInfo = getCategoryInfo('dietary', dietaryParam.replace(/-/g, ' '));
+  // Find the tag by slug
+  const tag = Object.keys(DIETARY_TAGS).find(tagName => {
+    const tagInfo = DIETARY_TAGS[tagName as DietaryTag];
+    return tagInfo.slug === dietarySlug;
+  }) as DietaryTag | undefined;
   
-  if (!categoryInfo) {
+  if (!tag) {
     return {
       notFound: true,
     };
   }
 
-  const recipes = await getRecipesByDietaryCategory(categoryInfo.name);
+  const recipes = await getRecipesByTag(tag);
+  const tagInfo = getTagInfo(tag);
 
   return {
     props: {
       recipes,
-      category: dietaryParam,
-      categoryInfo,
+      tag,
+      tagInfo: tagInfo ? {
+        name: tagInfo.name,
+        description: tagInfo.description,
+        icon: tagInfo.icon,
+      } : null,
     },
     revalidate: 60,
   };

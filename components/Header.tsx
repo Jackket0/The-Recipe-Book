@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import { Recipe } from '@/types/recipe';
 
 interface NavItem {
   href: string;
@@ -13,19 +14,151 @@ const Header: React.FC = () => {
   const router = useRouter();
   const [isCategoryDropdownOpen, setIsCategoryDropdownOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [searchResults, setSearchResults] = useState<Recipe[]>([]);
+  const [isSearchDropdownOpen, setIsSearchDropdownOpen] = useState(false);
+  const [allRecipes, setAllRecipes] = useState<Recipe[]>([]);
+  const [isLoadingRecipes, setIsLoadingRecipes] = useState(false);
+  const [isClient, setIsClient] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const searchRef = useRef<HTMLDivElement>(null);
 
-  // Close dropdown when clicking outside
+  // Set client flag to prevent hydration mismatch
   useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  // Load all recipes on component mount (only on client)
+  useEffect(() => {
+    if (!isClient) return;
+    
+    const loadRecipes = async () => {
+      setIsLoadingRecipes(true);
+      try {
+        // Fetch recipes from the API endpoint
+        const response = await fetch('/api/recipes');
+        if (response.ok) {
+          const recipes = await response.json();
+          setAllRecipes(recipes);
+        } else {
+          console.error('Failed to load recipes:', response.status);
+        }
+      } catch (error) {
+        console.error('Error loading recipes:', error);
+        // Fallback: try to get recipes from window.__NEXT_DATA__ if available
+        if (typeof window !== 'undefined' && (window as any).__NEXT_DATA__?.props?.recipes) {
+          setAllRecipes((window as any).__NEXT_DATA__.props.recipes);
+        }
+      } finally {
+        setIsLoadingRecipes(false);
+      }
+    };
+    loadRecipes();
+  }, [isClient]);
+
+  // Search functionality (only on client)
+  useEffect(() => {
+    if (!isClient) return;
+    
+    if (!searchTerm.trim()) {
+      setSearchResults([]);
+      setIsSearchDropdownOpen(false);
+      return;
+    }
+
+    const term = searchTerm.toLowerCase().trim();
+    const filtered = allRecipes.filter((recipe: Recipe): boolean => {
+      // Search in title
+      if (recipe.title.toLowerCase().includes(term)) {
+        return true;
+      }
+      
+      // Search in description
+      if (recipe.description?.toLowerCase().includes(term)) {
+        return true;
+      }
+      
+      // Search in category
+      if (recipe.category.toLowerCase().includes(term)) {
+        return true;
+      }
+      
+      // Search in tags
+      if (recipe.tags?.some((tag: string): boolean => tag.toLowerCase().includes(term))) {
+        return true;
+      }
+      
+      // Search in ingredients
+      if (recipe.ingredients.some((ingredient: string): boolean => ingredient.toLowerCase().includes(term))) {
+        return true;
+      }
+      
+      return false;
+    }).slice(0, 6); // Limit to 6 results
+
+    setSearchResults(filtered);
+    setIsSearchDropdownOpen(filtered.length > 0);
+  }, [searchTerm, allRecipes, isClient]);
+
+  // Close dropdowns when clicking outside (only on client)
+  useEffect(() => {
+    if (!isClient) return;
+    
     const handleClickOutside = (event: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
         setIsCategoryDropdownOpen(false);
+      }
+      if (searchRef.current && !searchRef.current.contains(event.target as Node)) {
+        setIsSearchDropdownOpen(false);
       }
     };
 
     document.addEventListener('mousedown', handleClickOutside);
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isClient]);
+
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(e.target.value);
+  };
+
+  const handleSearchSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchTerm.trim()) {
+      router.push(`/recipes?search=${encodeURIComponent(searchTerm.trim())}`);
+      setSearchTerm('');
+      setIsSearchDropdownOpen(false);
+    }
+  };
+
+  const handleRecipeClick = (recipe: Recipe) => {
+    router.push(`/recipes/${recipe.slug}`);
+    setSearchTerm('');
+    setIsSearchDropdownOpen(false);
+  };
+
+  const clearSearch = () => {
+    setSearchTerm('');
+    setSearchResults([]);
+    setIsSearchDropdownOpen(false);
+  };
+
+  // Keyboard shortcut to focus search
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if ((event.ctrlKey || event.metaKey) && event.key === 'k') {
+        event.preventDefault();
+        const searchInput = document.querySelector('input[placeholder="Search Recipes..."]') as HTMLInputElement;
+        if (searchInput) {
+          searchInput.focus();
+        }
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
     };
   }, []);
 
@@ -87,17 +220,87 @@ const Header: React.FC = () => {
 
           {/* Search Bar - Desktop */}
           <div className="hidden md:flex flex-1 max-w-lg mx-4 lg:mx-8">
-            <div className="relative w-full">
-              <input
-                type="text"
-                placeholder="Search Recipes..."
-                className="w-full px-4 py-3 border border-gray-300 rounded-full focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-colors text-gray-700"
-              />
-              <button className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-orange-500">
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                </svg>
-              </button>
+            <div ref={searchRef} className="relative w-full">
+              <form onSubmit={handleSearchSubmit} className="relative">
+                <input
+                  type="text"
+                  placeholder="Search Recipes... (Ctrl+K)"
+                  value={searchTerm}
+                  onChange={handleSearchChange}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-full focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-colors text-gray-700"
+                />
+                <button 
+                  type="submit"
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-orange-500"
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                  </svg>
+                </button>
+                {searchTerm && (
+                  <button
+                    type="button"
+                    onClick={clearSearch}
+                    className="absolute right-10 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                )}
+              </form>
+              
+              {/* Search Results Dropdown */}
+              {isClient && isSearchDropdownOpen && (
+                <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-lg shadow-xl border border-gray-200 z-50 max-h-96 overflow-y-auto">
+                  <div className="py-2">
+                    {isLoadingRecipes ? (
+                      <div className="px-4 py-3 text-sm text-gray-500 text-center">
+                        Loading recipes...
+                      </div>
+                    ) : searchResults.length > 0 ? (
+                      <>
+                        <div className="px-4 py-2 text-sm font-semibold text-gray-700 border-b border-gray-100">
+                          Found {searchResults.length} recipe{searchResults.length !== 1 ? 's' : ''}
+                        </div>
+                        {searchResults.map((recipe) => (
+                          <button
+                            key={recipe.slug}
+                            onClick={() => handleRecipeClick(recipe)}
+                            className="w-full text-left px-4 py-3 hover:bg-orange-50 transition-colors flex items-center space-x-3"
+                          >
+                            {recipe.image && (
+                              <img 
+                                src={recipe.image} 
+                                alt={recipe.title}
+                                className="w-12 h-12 object-cover rounded-lg flex-shrink-0"
+                              />
+                            )}
+                            <div className="flex-1 min-w-0">
+                              <div className="font-medium text-gray-900 truncate">{recipe.title}</div>
+                              <div className="text-sm text-gray-500 truncate">{recipe.category}</div>
+                            </div>
+                          </button>
+                        ))}
+                        {searchResults.length >= 6 && (
+                          <div className="px-4 py-2 border-t border-gray-100">
+                            <button
+                              onClick={handleSearchSubmit}
+                              className="w-full text-center text-sm text-orange-600 hover:text-orange-700 font-medium"
+                            >
+                              View all results →
+                            </button>
+                          </div>
+                        )}
+                      </>
+                    ) : searchTerm.trim() && !isLoadingRecipes ? (
+                      <div className="px-4 py-3 text-sm text-gray-500 text-center">
+                        No recipes found. Try a different search term.
+                      </div>
+                    ) : null}
+                  </div>
+                </div>
+              )}
             </div>
           </div>
 
@@ -164,7 +367,7 @@ const Header: React.FC = () => {
                     </svg>
                   </button>
                   
-                  {isCategoryDropdownOpen && (
+                  {isClient && isCategoryDropdownOpen && (
                     <div className="absolute top-full left-0 mt-2 w-56 bg-white rounded-lg shadow-xl border border-gray-200 z-50 max-h-96 overflow-y-auto">
                       <div className="py-2">
                         {item.dropdownItems?.map((dropdownItem, index) => {
@@ -219,22 +422,92 @@ const Header: React.FC = () => {
         </nav>
 
         {/* Mobile Menu */}
-        {isMobileMenuOpen && (
+        {isClient && isMobileMenuOpen && (
           <div className="md:hidden">
             <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 border-t border-gray-100">
               {/* Mobile Search */}
               <div className="mb-4">
                 <div className="relative">
-                  <input
-                    type="text"
-                    placeholder="Search Recipes..."
-                    className="w-full px-4 py-3 border border-gray-300 rounded-full focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-colors"
-                  />
-                  <button className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-orange-500">
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                    </svg>
-                  </button>
+                  <form onSubmit={handleSearchSubmit}>
+                    <input
+                      type="text"
+                      placeholder="Search Recipes... (Ctrl+K)"
+                      value={searchTerm}
+                      onChange={handleSearchChange}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-full focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-colors"
+                    />
+                    <button 
+                      type="submit"
+                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-orange-500"
+                    >
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                      </svg>
+                    </button>
+                    {searchTerm && (
+                      <button
+                        type="button"
+                        onClick={clearSearch}
+                        className="absolute right-10 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                      >
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                      </button>
+                    )}
+                  </form>
+                  
+                  {/* Mobile Search Results */}
+                  {isClient && isSearchDropdownOpen && (
+                    <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-lg shadow-xl border border-gray-200 z-50 max-h-96 overflow-y-auto">
+                      <div className="py-2">
+                        {isLoadingRecipes ? (
+                          <div className="px-4 py-3 text-sm text-gray-500 text-center">
+                            Loading recipes...
+                          </div>
+                        ) : searchResults.length > 0 ? (
+                          <>
+                            <div className="px-4 py-2 text-sm font-semibold text-gray-700 border-b border-gray-100">
+                              Found {searchResults.length} recipe{searchResults.length !== 1 ? 's' : ''}
+                            </div>
+                            {searchResults.map((recipe) => (
+                              <button
+                                key={recipe.slug}
+                                onClick={() => handleRecipeClick(recipe)}
+                                className="w-full text-left px-4 py-3 hover:bg-orange-50 transition-colors flex items-center space-x-3"
+                              >
+                                {recipe.image && (
+                                  <img 
+                                    src={recipe.image} 
+                                    alt={recipe.title}
+                                    className="w-12 h-12 object-cover rounded-lg flex-shrink-0"
+                                  />
+                                )}
+                                <div className="flex-1 min-w-0">
+                                  <div className="font-medium text-gray-900 truncate">{recipe.title}</div>
+                                  <div className="text-sm text-gray-500 truncate">{recipe.category}</div>
+                                </div>
+                              </button>
+                            ))}
+                            {searchResults.length >= 6 && (
+                              <div className="px-4 py-2 border-t border-gray-100">
+                                <button
+                                  onClick={handleSearchSubmit}
+                                  className="w-full text-center text-sm text-orange-600 hover:text-orange-700 font-medium"
+                                >
+                                  View all results →
+                                </button>
+                              </div>
+                            )}
+                          </>
+                        ) : searchTerm.trim() && !isLoadingRecipes ? (
+                          <div className="px-4 py-3 text-sm text-gray-500 text-center">
+                            No recipes found. Try a different search term.
+                          </div>
+                        ) : null}
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
               
