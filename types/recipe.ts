@@ -1,18 +1,18 @@
 export interface Recipe {
   slug: string;
   title: string;
-  description?: string;
+  description: string | null;
   category: string;
-  image?: string;
-  prepTime?: string;
-  cookTime?: string;
-  servings?: number;
-  difficulty?: 'Easy' | 'Medium' | 'Hard';
+  image: string | null;
+  prepTime: string | null;
+  cookTime: string | null;
+  servings: number | null;
+  difficulty: 'Easy' | 'Medium' | 'Hard' | null;
   ingredients: string[];
   instructions: string[];
-  tags?: string[];
-  dateCreated?: string;
-  dateModified?: string;
+  tags: string[] | null;
+  dateCreated: string | null;
+  dateModified: string | null;
   content: string;
 }
 
