@@ -1,6 +1,5 @@
 import React from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 import { Recipe } from '@/types/recipe';
 
 interface RecipeCardProps {
@@ -14,11 +13,10 @@ const RecipeCard: React.FC<RecipeCardProps> = ({ recipe }) => {
         {/* Image */}
         <div className="relative h-48 w-full">
           {recipe.image ? (
-            <Image
+            <img
               src={recipe.image}
               alt={recipe.title}
-              fill
-              className="object-cover group-hover:scale-105 transition-transform duration-300"
+              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
             />
           ) : (
             <div className="w-full h-full bg-gradient-to-br from-primary-100 to-primary-200 flex items-center justify-center">
