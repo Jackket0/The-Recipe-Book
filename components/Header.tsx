@@ -65,7 +65,7 @@ const Header: React.FC = () => {
   ];
 
   return (
-    <header className="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-[1000]">
+    <header className="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Top section with logo, search, and social icons */}
         <div className="flex justify-between items-center h-16 lg:h-18">
@@ -148,7 +148,7 @@ const Header: React.FC = () => {
           {navItems.map((item) => (
             <div key={item.href} className="relative">
               {item.hasDropdown ? (
-                <div ref={dropdownRef} className="relative z-[1050]">
+                <div ref={dropdownRef} className="relative z-50">
                   <button
                     onClick={() => setIsCategoryDropdownOpen(!isCategoryDropdownOpen)}
                     className="text-xs lg:text-sm font-bold tracking-wide transition-colors duration-200 hover:text-orange-600 text-gray-700 flex items-center whitespace-nowrap"
@@ -165,7 +165,7 @@ const Header: React.FC = () => {
                   </button>
                   
                   {isCategoryDropdownOpen && (
-                    <div className="absolute top-full left-0 mt-2 w-56 bg-white rounded-lg shadow-xl border border-gray-200 z-[1100] max-h-96 overflow-y-auto isolate">
+                    <div className="absolute top-full left-0 mt-2 w-56 bg-white rounded-lg shadow-xl border border-gray-200 z-[9999] max-h-96 overflow-y-auto">
                       <div className="py-2">
                         {item.dropdownItems?.map((dropdownItem, index) => {
                           if (dropdownItem.isSeparator) {
